@@ -10,7 +10,7 @@ class User {
     private $profilePicture;
     private $dateJoined;
     private $lastLogin;
-    private $achievements; // JSON or list of Achievement objects
+    private $achievements; 
     private $streakCount;
     private $totalTasksCompleted;
     private $role;

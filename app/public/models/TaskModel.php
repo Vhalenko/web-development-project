@@ -1,108 +1,77 @@
 <?php
 
-class Task {
-    private $taskId;
-    private $userId;
-    private $title;
-    private $description;
-    private $categoryId;
-    private $priority;
-    private $deadline;
-    private $creationDate;
-    private $completionDate;
-    private $isCompleted;
-    private $streakContribution;
+class TaskModel extends BaseModel {
+    protected static $pdo;
 
-    public function __construct($taskId, $userId, $title, $categoryId, $priority, $creationDate, $isCompleted = false, $description = null, $deadline = null, $completionDate = null, $streakContribution = false) {
-        $this->taskId = $taskId;
-        $this->userId = $userId;
-        $this->title = $title;
-        $this->description = $description;
-        $this->categoryId = $categoryId;
-        $this->priority = $priority;
-        $this->deadline = $deadline;
-        $this->creationDate = $creationDate;
-        $this->completionDate = $completionDate;
-        $this->isCompleted = $isCompleted;
-        $this->streakContribution = $streakContribution;
+    public function __construct($pdo) {
+        $this->$pdo = $pdo;
     }
 
-    // Getters and Setters
-    public function getTaskId() {
-        return $this->taskId;
-    }
-    public function setTaskId($taskId) {
-        $this->taskId = $taskId;
-    }
-
-    public function getUserId() {
-        return $this->userId;
-    }
-    public function setUserId($userId) {
-        $this->userId = $userId;
-    }
-
-    public function getTitle() {
-        return $this->title;
-    }
-    public function setTitle($title) {
-        $this->title = $title;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-    public function setDescription($description) {
-        $this->description = $description;
+    public function addTask($task) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO task (user_id, title, description, category, priority, deadline, creation_date, completion_date, is_completed, streak_contribution)
+            VALUES (:user_id, :title, :description, :category, :priority, :deadline, :creation_date, :completion_date, :is_completed, :streak_contribution)
+        ");
+        
+        $stmt->execute([
+            ':task_id' => $task['task_id'],
+            ':user_id' => $task['user_id'],
+            ':title' => $task['title'],
+            ':description' => $task['description'],
+            ':category' => $task['category'],
+            ':priority' => $task['priority'],
+            ':deadline' => $task['deadline'],
+            ':creation_date' => $task['creation_date'],
+            ':completion_date' => $task['completion_date'],
+            ':is_completed' => $task['is_completed'],
+            ':streak_contribution' => $task['streak_contribution']
+        ]);
     }
 
-    public function getCategoryId() {
-        return $this->categoryId;
-    }
-    public function setCategoryId($categoryId) {
-        $this->categoryId = $categoryId;
-    }
-
-    public function getPriority() {
-        return $this->priority;
-    }
-    public function setPriority($priority) {
-        $this->priority = $priority;
+    public function removeTask($task) {
+        $stmt = $this->pdo->prepare("DELETE FROM task WHERE task_id = :task_id");
+        $stmt->bindParm(':task_id', $task->getTaskId(), PDO::PARAM_INT);
+        $stmt->execute();
     }
 
-    public function getDeadline() {
-        return $this->deadline;
-    }
-    public function setDeadline($deadline) {
-        $this->deadline = $deadline;
+    public function editTask($task) {
+        $stmt = $this->pdo->prepare("
+            UPDATE task
+            SET user_id = :user_id,
+                title = :title,
+                description = :description,
+                category = :category,
+                priority = :priority,
+                deadline = :deadline,
+                creation_date = :creation_date,
+                completion_date = :completion_date,
+                is_completed = :is_completed,
+                streak_contribution = :streak_contribution
+            WHERE task_id = :task_id
+        ");
+        
+        $stmt->execute([
+            ':task_id' => $task['task_id'],
+            ':user_id' => $task['user_id'],
+            ':title' => $task['title'],
+            ':description' => $task['description'],
+            ':category' => $task['category'],
+            ':priority' => $task['priority'],
+            ':deadline' => $task['deadline'],
+            ':creation_date' => $task['creation_date'],
+            ':completion_date' => $task['completion_date'],
+            ':is_completed' => $task['is_completed'],
+            ':streak_contribution' => $task['streak_contribution']
+        ]);
     }
 
-    public function getCreationDate() {
-        return $this->creationDate;
-    }
-    public function setCreationDate($creationDate) {
-        $this->creationDate = $creationDate;
-    }
+    public function getTasksForUser($user) {
+        $stmt = $this->pdo->prepare("SELECT * FROM task WHERE user_id = :user_id");
+        $stmt->bindParam(':user_id', $user->getUserId(), PDO::PARAM_INT);
+        $stmt->execute();
 
-    public function getCompletionDate() {
-        return $this->completionDate;
-    }
-    public function setCompletionDate($completionDate) {
-        $this->completionDate = $completionDate;
-    }
+        $topUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    public function getIsCompleted() {
-        return $this->isCompleted;
-    }
-    public function setIsCompleted($isCompleted) {
-        $this->isCompleted = $isCompleted;
-    }
-
-    public function getStreakContribution() {
-        return $this->streakContribution;
-    }
-    public function setStreakContribution($streakContribution) {
-        $this->streakContribution = $streakContribution;
+        return $topUsers; 
     }
 }
-

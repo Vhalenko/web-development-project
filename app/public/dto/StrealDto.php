@@ -1,6 +1,6 @@
 <?php
 
-class StreakModel extends BaseModel {
+class StreakDto {
     private $streakId;
     private $userId;
     private $startDate;

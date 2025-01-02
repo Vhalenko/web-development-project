@@ -2,108 +2,86 @@
 
 require_once(__DIR__ . "/BaseModel.php");
 
-class User {
-    private $userId;
-    private $username;
-    private $email;
-    private $passwordHash;
-    private $profilePicture;
-    private $dateJoined;
-    private $lastLogin;
-    private $achievements; 
-    private $streakCount;
-    private $totalTasksCompleted;
-    private $role;
+class UserModel extends BaseModel {
+    protected static $pdo;
 
-    public function __construct($userId, $username, $email, $passwordHash, $dateJoined, $role, $profilePicture = null, $achievements = [], $streakCount = 0, $totalTasksCompleted = 0, $lastLogin = null) {
-        $this->userId = $userId;
-        $this->username = $username;
-        $this->email = $email;
-        $this->passwordHash = $passwordHash;
-        $this->profilePicture = $profilePicture;
-        $this->dateJoined = $dateJoined;
-        $this->lastLogin = $lastLogin;
-        $this->achievements = $achievements;
-        $this->streakCount = $streakCount;
-        $this->totalTasksCompleted = $totalTasksCompleted;
-        $this->role = $role;
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
     }
 
-    // Getters and Setters
-    public function getUserId() {
-        return $this->userId;
-    }
-    public function setUserId($userId) {
-        $this->userId = $userId;
+    public function getUsersByPoints() {
+        $stmt = $this->pdo->prepare("SELECT * FROM user ORDER BY total_points DESC LIMIT 50");
+        $stmt->execute();
+
+        $topUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $topUsers; 
     }
 
-    public function getUsername() {
-        return $this->username;
+    public function addUser($user) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO user (username, email, password_hash, profile_picture, date_joined, last_login, achievements, streak_count, total_tasks_completed, role)
+            VALUES (:username, :email, :password_hash, :profile_picture, :date_joined, :last_login, :achievements, :streak_count, :total_tasks_completed, :role)
+        ");
+        
+        $stmt->execute([
+            ':username' => $user['username'],
+            ':email' => $user['email'],
+            ':password_hash' => $user['password_hash'],
+            ':profile_picture' => $user['profile_picture'],
+            ':date_joined' => $user['date_joined'],
+            ':last_login' => $user['last_login'],
+            ':achievements' => $user['achievements'],
+            ':streak_count' => $user['streak_count'],
+            ':total_tasks_completed' => $user['total_tasks_completed'],
+            ':role' => $user['role']
+        ]);
     }
-    public function setUsername($username) {
-        $this->username = $username;
+    
+
+    public function getUser($username, $password) {
+        $stmt = $this->pdo->prepare("SELECT * FROM user WHERE username = :username");
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password_hash'])) {
+            return $user; 
+        } else {
+            return null; 
+        }
     }
 
-    public function getEmail() {
-        return $this->email;
+    public function editUser($user) {
+        $stmt = $this->pdo->prepare("
+            UPDATE user
+            SET username = :username,
+                email = :email,
+                password_hash = :password_hash,
+                profile_picture = :profile_picture,
+                date_joined = :date_joined,
+                last_login = :last_login,
+                achievements = :achievements,
+                streak_count = :streak_count,
+                total_tasks_completed = :total_tasks_completed,
+                role = :role
+            WHERE user_id = :user_id
+        ");
+        
+        $stmt->execute([
+            ':user_id' => $user['user_id'],
+            ':username' => $user['username'],
+            ':email' => $user['email'],
+            ':password_hash' => $user['password_hash'],
+            ':profile_picture' => $user['profile_picture'],
+            ':date_joined' => $user['date_joined'],
+            ':last_login' => $user['last_login'],
+            ':achievements' => $user['achievements'],
+            ':streak_count' => $user['streak_count'],
+            ':total_tasks_completed' => $user['total_tasks_completed'],
+            ':role' => $user['role']
+        ]);
     }
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-
-    public function getPasswordHash() {
-        return $this->passwordHash;
-    }
-    public function setPasswordHash($passwordHash) {
-        $this->passwordHash = $passwordHash;
-    }
-
-    public function getProfilePicture() {
-        return $this->profilePicture;
-    }
-    public function setProfilePicture($profilePicture) {
-        $this->profilePicture = $profilePicture;
-    }
-
-    public function getDateJoined() {
-        return $this->dateJoined;
-    }
-    public function setDateJoined($dateJoined) {
-        $this->dateJoined = $dateJoined;
-    }
-
-    public function getLastLogin() {
-        return $this->lastLogin;
-    }
-    public function setLastLogin($lastLogin) {
-        $this->lastLogin = $lastLogin;
-    }
-
-    public function getAchievements() {
-        return $this->achievements;
-    }
-    public function setAchievements($achievements) {
-        $this->achievements = $achievements;
-    }
-
-    public function getStreakCount() {
-        return $this->streakCount;
-    }
-    public function setStreakCount($streakCount) {
-        $this->streakCount = $streakCount;
-    }
-
-    public function getTotalTasksCompleted() {
-        return $this->totalTasksCompleted;
-    }
-    public function setTotalTasksCompleted($totalTasksCompleted) {
-        $this->totalTasksCompleted = $totalTasksCompleted;
-    }
-
-    public function getRole() {
-        return $this->role;
-    }
-    public function setRole($role) {
-        $this->role = $role;
-    }
+    
 }

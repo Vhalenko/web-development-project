@@ -1,6 +1,6 @@
 <?php
 
-class AchievementModel extends BaseModel {
+class AchievementDto {
     private $achievementId;
     private $name;
     private $description;

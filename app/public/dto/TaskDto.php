@@ -5,7 +5,6 @@ class TaskDto {
     private $userId;
     private $title;
     private $description;
-    private $categoryId;
     private $priority;
     private $deadline;
     private $creationDate;
@@ -13,12 +12,11 @@ class TaskDto {
     private $isCompleted;
     private $streakContribution;
 
-    public function __construct($taskId, $userId, $title, $categoryId, $priority, $creationDate, $isCompleted = false, $description = null, $deadline = null, $completionDate = null, $streakContribution = false) {
+    public function __construct($taskId, $userId, $title, $priority, $creationDate, $isCompleted, $description, $deadline, $completionDate, $streakContribution) {
         $this->taskId = $taskId;
         $this->userId = $userId;
         $this->title = $title;
         $this->description = $description;
-        $this->categoryId = $categoryId;
         $this->priority = $priority;
         $this->deadline = $deadline;
         $this->creationDate = $creationDate;
@@ -54,13 +52,6 @@ class TaskDto {
     }
     public function setDescription($description) {
         $this->description = $description;
-    }
-
-    public function getCategoryId() {
-        return $this->categoryId;
-    }
-    public function setCategoryId($categoryId) {
-        $this->categoryId = $categoryId;
     }
 
     public function getPriority() {
@@ -106,3 +97,8 @@ class TaskDto {
     }
 }
 
+enum Priotiry: string {
+    case High = 'high';
+    case Medium = 'medium';
+    case Low = 'low';
+}

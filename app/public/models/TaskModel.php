@@ -3,8 +3,7 @@
 class TaskModel extends BaseModel {
     protected static $pdo;
 
-    public function __construct($pdo) {
-        $this->$pdo = $pdo;
+    public function __construct() {
     }
 
     public function addTask($task) {

@@ -4,15 +4,13 @@ class AchievementDto {
     private $achievementId;
     private $name;
     private $description;
-    private $badgeImage;
     private $rewardPoints;
     private $unlockCriteria;
 
-    public function __construct($achievementId, $name, $description, $badgeImage, $rewardPoints, $unlockCriteria) {
+    public function __construct($achievementId, $name, $description, $rewardPoints, $unlockCriteria) {
         $this->achievementId = $achievementId;
         $this->name = $name;
         $this->description = $description;
-        $this->badgeImage = $badgeImage;
         $this->rewardPoints = $rewardPoints;
         $this->unlockCriteria = $unlockCriteria;
     }
@@ -37,13 +35,6 @@ class AchievementDto {
     }
     public function setDescription($description) {
         $this->description = $description;
-    }
-
-    public function getBadgeImage() {
-        return $this->badgeImage;
-    }
-    public function setBadgeImage($badgeImage) {
-        $this->badgeImage = $badgeImage;
     }
 
     public function getRewardPoints() {

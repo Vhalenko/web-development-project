@@ -7,9 +7,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../../views/pages/tasks.php">Tasks</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../../views/pages/leaderboard.php">Leaderboard</a></li>
-                    <li class="nav-item"><a class="btn btn-outline-light" href="../../views/pages/profile.php">Profile</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-light" href="../../views/pages/profile.php">Login</a></li>
                 </ul>
             </div>
         </div>

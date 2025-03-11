@@ -1,41 +1,42 @@
 <?php
 
 class TaskModel extends BaseModel {
-    protected static $pdo;
-
-    public function __construct() {
-    }
-
-    public function addTask($task) {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO task (user_id, title, description, category, priority, deadline, creation_date, completion_date, is_completed, streak_contribution)
-            VALUES (:user_id, :title, :description, :category, :priority, :deadline, :creation_date, :completion_date, :is_completed, :streak_contribution)
-        ");
+    public function addTask(TaskDto $task) {
+        $query = "INSERT INTO task (user_id, title, description, priority, deadline, creation_date, completion_date, is_completed, streak_contribution)
+            VALUES (:user_id, :title, :description, :priority, :deadline, :creation_date, :completion_date, :is_completed, :streak_contribution)";
+        $stmt = self::$pdo->prepare($query);
         
-        $stmt->execute([
-            ':task_id' => $task['task_id'],
-            ':user_id' => $task['user_id'],
-            ':title' => $task['title'],
-            ':description' => $task['description'],
-            ':category' => $task['category'],
-            ':priority' => $task['priority'],
-            ':deadline' => $task['deadline'],
-            ':creation_date' => $task['creation_date'],
-            ':completion_date' => $task['completion_date'],
-            ':is_completed' => $task['is_completed'],
-            ':streak_contribution' => $task['streak_contribution']
-        ]);
+        $stmt->bindParam(':user_id', $task->getUserId());
+        $stmt->bindParam(':title', $task->getTitle());
+        $stmt->bindParam(':description', $task->getDescription());
+        $stmt->bindParam(':priority', $task->getPriority());
+        $stmt->bindParam(':deadline', $task->getDeadline());
+        $stmt->bindParam(':creation_date', $task->getCreationDate());
+        $stmt->bindParam(':completion_date', $task->getCompletionDate());
+        $stmt->bindParam(':is_completed', $task->getIsCompleted());
+        $stmt->bindParam(':streak_contribution', $task->getStreakContribution());
+
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 
     public function removeTask($task) {
-        $stmt = $this->pdo->prepare("DELETE FROM task WHERE task_id = :task_id");
-        $stmt->bindParm(':task_id', $task->getTaskId(), PDO::PARAM_INT);
-        $stmt->execute();
+        $query = "DELETE FROM task WHERE task_id = :task_id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':task_id', $task->getTaskId());
+        
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 
     public function editTask($task) {
-        $stmt = $this->pdo->prepare("
-            UPDATE task
+        $query = "UPDATE task
             SET user_id = :user_id,
                 title = :title,
                 description = :description,
@@ -46,22 +47,26 @@ class TaskModel extends BaseModel {
                 completion_date = :completion_date,
                 is_completed = :is_completed,
                 streak_contribution = :streak_contribution
-            WHERE task_id = :task_id
-        ");
+            WHERE task_id = :task_id";
+
+        $stmt = self::$pdo->prepare($query);
         
-        $stmt->execute([
-            ':task_id' => $task['task_id'],
-            ':user_id' => $task['user_id'],
-            ':title' => $task['title'],
-            ':description' => $task['description'],
-            ':category' => $task['category'],
-            ':priority' => $task['priority'],
-            ':deadline' => $task['deadline'],
-            ':creation_date' => $task['creation_date'],
-            ':completion_date' => $task['completion_date'],
-            ':is_completed' => $task['is_completed'],
-            ':streak_contribution' => $task['streak_contribution']
-        ]);
+        $stmt->bindParam(':task_id', $task->getTaskId());
+        $stmt->bindParam(':user_id', $task->getUserId());
+        $stmt->bindParam(':title', $task->getTitle());
+        $stmt->bindParam(':description', $task->getDescription());
+        $stmt->bindParam(':priority', $task->getPriority());
+        $stmt->bindParam(':deadline', $task->getDeadline());
+        $stmt->bindParam(':creation_date', $task->getCreationDate());
+        $stmt->bindParam(':completion_date', $task->getCompletionDate());
+        $stmt->bindParam(':is_completed', $task->getIsCompleted());
+        $stmt->bindParam(':streak_contribution', $task->getStreakContribution());
+
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 
     public function getTasksForUser($user) {

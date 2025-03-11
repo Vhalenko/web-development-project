@@ -12,25 +12,20 @@ class UserController
     }
      
     public function login() {
-        $errors = [];
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = htmlspecialchars($_POST['username']);
+            $email = $_POST['email'];
             $password = $_POST['password'];
 
-            $userDTO = $this->userModel->getUser($username, $password);
+            $userDTO = $this->userModel->getUser($email, $password);
 
-            if ($userDTO) {
+            if (!is_null($userDTO)) {
                 $_SESSION['user'] = [
                     'id' => $userDTO->getUserId(),
                     'username' => $userDTO->getUsername(),
                     'email' => $userDTO->getEmail(),
-                    'password' => $userDTO->getPassword(),
                     'streak_count' => $userDTO->getStreakCount(),
                     'total_tasks_completed' => $userDTO->getTotalTasksCompleted()
                 ];
-                header("Location: /");
-                exit;
             } else {
                 exit;
             }
@@ -45,24 +40,22 @@ class UserController
     }
 
     public function signUp() {
-        $errors = [];
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = htmlspecialchars($_POST['username']);
             $email = htmlspecialchars($_POST['email']);
             $password = $_POST['password'];
 
             if ($this->userModel->emailExists($email)) {
-                $errors[] = "Username or email already in use.";
+                echo "Username or email already in use.";
                 exit;
             }
 
-            $userDTO = $this->userModel->addUser($username, $email, $password, 0, 0);
-
-            if ($userDTO) {
-                header("Location: /login");
-            } else {
-                echo "Error creating user.";
+            try {
+                $this->userModel->addUser($username, $email, $password, 0, 0);
+            }
+            catch(Exception $e) {
+                echo "Error: " . $e->getMessage();
+                exit;
             }
         }
     }

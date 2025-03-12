@@ -23,3 +23,13 @@ Route::add('/signup', function () {
         require_once(__DIR__ . "/../views/pages/login.php");
     }
 }, ['get', 'post']);
+
+Route::add('/leaderboard', function () {
+    $userController = new UserController();
+    $topUsers[] = $userController->getUsersByPoints();
+    require_once(__DIR__ . "/../views/pages/leaderboard.php");
+});
+
+Route::add('/profile', function () {
+    require(__DIR__. "/../views/pages/profile.php");
+});

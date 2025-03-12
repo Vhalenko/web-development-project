@@ -4,34 +4,29 @@
             <div class="col-md-8">
                 <h2>Manage Your Tasks</h2>
                 <ul class="list-group mb-4">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>Finish Homework</strong>
-                            <p class="text-muted mb-0">Priority: High | Deadline: 2024-12-10</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-success">Complete</button>
-                            <button class="btn btn-sm btn-warning">Edit</button>
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>Plan Weekend Trip</strong>
-                            <p class="text-muted mb-0">Priority: Medium | Deadline: 2024-12-15</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-success">Complete</button>
-                            <button class="btn btn-sm btn-warning">Edit</button>
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </div>
-                    </li>
+
+                    <?php foreach ($tasks as $task) { ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong><?= htmlspecialchars($task->getTitle()) ?></strong>
+                                <p class="text-muted mb-0">
+                                    Priority: <?= htmlspecialchars($task->getPriority()) ?> |
+                                    Deadline: <?= htmlspecialchars($task->getDeadline()) ?>
+                                </p>
+                            </div>
+                            <div>
+                                <a href="/complete-task/<?= $task->getTaskId() ?>" class="btn btn-sm btn-success">Complete</a>
+                                <a href="/edit-task/<?= $task->getTaskId() ?>" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="/remove-task/<?= $task->getTaskId() ?>" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </li>
+                    <?php } ?>
                 </ul>
             </div>
 
             <div class="col-md-4">
                 <h2>Add New Task</h2>
-                <form>
+                <form action="/add-task" method="POST">
                     <div class="mb-3">
                         <label for="taskTitle" class="form-label">Task Title</label>
                         <input type="text" id="taskTitle" class="form-control" placeholder="Enter task title">
@@ -59,5 +54,5 @@
     </div>
 </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/main.js"></script>

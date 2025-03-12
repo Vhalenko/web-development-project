@@ -13,7 +13,21 @@ class UserModel extends BaseModel
 
         $topUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $topUsers;
+        $users = [];
+
+        foreach($topUsers as $topUser) {
+            $user = new UserDto(
+                $topUser['user_id'],
+                $topUser['username'],
+                $topUser['email'],
+                $topUser['streak_count'],
+                $topUser['total_tasks_completed']
+            );
+
+            $users[] = $user;
+        }
+
+        return $users;
     }
 
     public function addUser(string $username, string $email, string $password, int $streakCount, int $totalTasksCompleted): ?bool

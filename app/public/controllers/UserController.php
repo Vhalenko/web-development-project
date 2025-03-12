@@ -59,4 +59,8 @@ class UserController
             }
         }
     }
+
+    public function getUsersByPoints() {
+        return $this->userModel->getUsersByPoints();
+    }
 }

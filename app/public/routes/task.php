@@ -18,8 +18,6 @@ Route::add('/remove-task([0-9]*)', function ($id) {
 Route::add('/add-task', function () {
     $taskController = new TaskController();
     $taskController->addTask();
-
-    require_once(__DIR__ . "/../views/pages/tasks.php");
 });
 
 Route::add('/edit-task([0-9]*)', function ($id) {

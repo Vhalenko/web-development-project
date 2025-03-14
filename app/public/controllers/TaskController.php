@@ -1,7 +1,7 @@
 <?php
 
-require_once(__DIR__ . "/../../models/TaskModel.php");
-require_once(__DIR__ . "/../../dto/TaskDto.php");
+require_once(__DIR__ . "/../models/TaskModel.php");
+require_once(__DIR__ . "/../dto/TaskDto.php");
 require_once(__DIR__ . "/../dto/UserDto.php");
 
 class TaskController

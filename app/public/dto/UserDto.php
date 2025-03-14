@@ -8,7 +8,7 @@ class UserDto {
     private int $totalTasksCompleted;
 
     public function __construct(int $userId, string $username, string $email, int $streakCount, int $totalTasksCompleted) {
-        $this->$userId = $userId;
+        $this->userId = $userId;
         $this->username = $username;
         $this->email = $email;
         $this->streakCount = $streakCount;

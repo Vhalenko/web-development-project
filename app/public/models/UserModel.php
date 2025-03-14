@@ -47,6 +47,7 @@ class UserModel extends BaseModel
 
         try {
             $stmt->execute();
+            echo "CHLENN!!!";
             return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -66,12 +67,11 @@ class UserModel extends BaseModel
         if ($user && password_verify($password, $user['password_hash'])) {
             try {
                 return new UserDto(
-                    $user['user_id'],
-                    $user['username'],
-                    $user['email'],
-                    $user['streak_count'],
-                    $user['total_tasks_completed']
-                );
+                $user['user_id'],
+                $user['username'],
+                $user['email'],
+                $user['streak_count'],
+                $user['total_tasks_completed']);
             }
             catch(Exception $e) {
                 echo "Error: " . $e->getMessage();

@@ -17,63 +17,63 @@ function toggleForm(formType) {
     }
 }
 
-function login() {
-    username = usernameTextField.textContent
-}
+// function login() {
+//     username = usernameTextField.textContent
+// }
 
-function signUp() {
+// function signUp() {
 
-}
+// }
 
-loginButton.addEventListener("click", async function() {
-    const username = usernameTextField.value.trim(); 
-    const password = passwordTextField.value.trim(); 
+// loginButton.addEventListener("click", async function() {
+//     const username = usernameTextField.value.trim(); 
+//     const password = passwordTextField.value.trim(); 
 
-    const response = await fetch('http://localhost/api/users/login', { 
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    });
+//     const response = await fetch('http://localhost/api/users/login', { 
+//         method: "GET",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({
+//             username: username,
+//             password: password
+//         })
+//     });
 
-    const data = await response.json(); // Convert response to JSON
+//     const data = await response.json(); // Convert response to JSON
 
-    console.log(response);
-})
+//     console.log(response);
+// })
 
-signUpButton.addEventListener("click", async function() {
-    event.preventDefault(); // Prevent default form submission
+// signUpButton.addEventListener("click", async function() {
+//     event.preventDefault(); // Prevent default form submission
 
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+//     const username = document.getElementById("username").value;
+//     const email = document.getElementById("email").value;
+//     const password = document.getElementById("password").value;
 
-    try {
-        const response = await fetch("http://localhost/api/users", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                email: email,
-                password: password
-            })
-        });
+//     try {
+//         const response = await fetch("http://localhost/api/users", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify({
+//                 username: username,
+//                 email: email,
+//                 password: password
+//             })
+//         });
 
-        if (response.ok) {
-            console.log(response);
-            alert("Sign-up successful! You can now log in.");
-            //window.location.href = "/login"; // Redirect to login page
-        } else {
-            alert("Error: " + response);
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert(error);
-    }
-})
+//         if (response.ok) {
+//             console.log(response);
+//             alert("Sign-up successful! You can now log in.");
+//             //window.location.href = "/login"; // Redirect to login page
+//         } else {
+//             alert("Error: " + response);
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//         alert(error);
+//     }
+// })

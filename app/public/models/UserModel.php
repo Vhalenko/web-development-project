@@ -5,30 +5,30 @@ require_once(__DIR__ . "/../dto/UserDto.php");
 
 class UserModel extends BaseModel
 {
-    public function getUsersByPoints()
+    public function getUsersByPoints(): array
     {
         $query = "SELECT * FROM user ORDER BY total_points DESC LIMIT 50";
-        $stmt = self::$pdo->prepare($query);
+        $stmt = $this->pdo->prepare($query);
         $stmt->execute();
 
         $topUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $users = [];
 
-        foreach($topUsers as $topUser) {
-            $user = new UserDto(
-                $topUser['user_id'],
-                $topUser['username'],
-                $topUser['email'],
-                $topUser['streak_count'],
-                $topUser['total_tasks_completed']
+        foreach ($topUsers as $topUser) {
+            $users[] = new UserDto(
+                $topUser['user_id'],              
+                $topUser['username'],                   
+                $topUser['email'],                       
+                $topUser['streak_count'],          
+                $topUser['total_tasks_completed'], 
+                $topUser['total_points']          
             );
-
-            $users[] = $user;
         }
 
         return $users;
     }
+
 
     public function addUser(string $username, string $email, string $password, int $streakCount, int $totalTasksCompleted): ?bool
     {
@@ -56,30 +56,32 @@ class UserModel extends BaseModel
     }
 
 
-    public function getUser(string $email, string $password): ?UserDto {
+    public function getUser(string $email, string $password): ?UserDto
+    {
         $query = "SELECT * FROM user WHERE email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
-    
+
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($user && password_verify($password, $user['password_hash'])) {
             try {
                 return new UserDto(
-                $user['user_id'],
-                $user['username'],
-                $user['email'],
-                $user['streak_count'],
-                $user['total_tasks_completed']);
-            }
-            catch(Exception $e) {
+                    $user['user_id'],
+                    $user['username'],
+                    $user['email'],
+                    $user['streak_count'],
+                    $user['total_tasks_completed'],
+                    $user['total_points']
+                );
+            } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
             }
         }
         return null;
     }
-    
+
 
     public function editUser(int $id, ?string $username, ?string $email, ?string $password): bool
     {
@@ -148,6 +150,7 @@ class UserModel extends BaseModel
                     $user['email'],
                     $user['streak_count'],
                     $user['total_tasks_completed'],
+                    $user['total_points']
                 );
             }
         } catch (Exception $e) {

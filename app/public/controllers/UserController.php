@@ -10,8 +10,9 @@ class UserController
     {
         $this->userModel = new UserModel();
     }
-     
-    public function login() {
+
+    public function login()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
@@ -33,14 +34,16 @@ class UserController
         }
     }
 
-    public function logout() {
+    public function logout()
+    {
         session_unset();
         session_destroy();
         header("Location: /");
         exit;
     }
 
-    public function signUp() {
+    public function signUp()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = htmlspecialchars($_POST['username']);
             $email = htmlspecialchars($_POST['email']);
@@ -53,19 +56,20 @@ class UserController
 
             try {
                 $this->userModel->addUser($username, $email, $password, 0, 0);
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
                 exit;
             }
         }
     }
 
-    public function getUsersByPoints() {
+    public function getUsersByPoints(): array
+    {
         return $this->userModel->getUsersByPoints();
     }
 
-    public function editUser() {
+    public function editUser()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = ($_POST['username']);
             $email = $_POST['email'];
@@ -90,9 +94,10 @@ class UserController
         return false;
     }
 
-    private function updateSession(int $userId) {
+    private function updateSession(int $userId)
+    {
         $userDTO = $this->userModel->getUserById($userId);
-        if (!is_null($userDTO)) {            
+        if (!is_null($userDTO)) {
             $_SESSION['user'] = [
                 'id' => $userDTO->getUserId(),
                 'username' => $userDTO->getUsername(),
@@ -100,8 +105,7 @@ class UserController
                 'streak_count' => $userDTO->getStreakCount(),
                 'total_tasks_completed' => $userDTO->getTotalTasksCompleted()
             ];
-        }
-        else {
+        } else {
             echo "Error updating a session";
         }
     }

@@ -20,7 +20,7 @@
                         <td><strong><?= htmlspecialchars($user->getUsername()) ?></strong></td>
                         <td><?= htmlspecialchars($user->getTotalTasksCompleted()) ?></td>
                         <td><?= htmlspecialchars($user->getStreakCount()) ?> Days</td>
-                        <td><?= htmlspecialchars($user->getPoints()) ?></td>
+                        <td><?= htmlspecialchars($user->getTotalPoints()) ?></td>
                     </tr>
                 <?php
                     $count++;

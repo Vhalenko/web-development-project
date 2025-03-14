@@ -6,13 +6,15 @@ class UserDto {
     private string $email;
     private int $streakCount;
     private int $totalTasksCompleted;
+    private int $totalPoints;
 
-    public function __construct(int $userId, string $username, string $email, int $streakCount, int $totalTasksCompleted) {
+    public function __construct(int $userId, string $username, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints) {
         $this->userId = $userId;
         $this->username = $username;
         $this->email = $email;
         $this->streakCount = $streakCount;
         $this->totalTasksCompleted = $totalTasksCompleted;
+        $this->totalPoints = $totalPoints;
     }
 
     // Getters and Setters
@@ -49,5 +51,12 @@ class UserDto {
     }
     public function setTotalTasksCompleted($totalTasksCompleted) {
         $this->totalTasksCompleted = $totalTasksCompleted;
+    }
+
+    public function getTotalPoints() :int {
+        return $this->totalPoints;
+    }
+    public function setTotalPoints($totalPoints) {
+        $this->totalPoints = $totalPoints;
     }
 }

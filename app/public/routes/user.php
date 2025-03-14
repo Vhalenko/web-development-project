@@ -25,9 +25,11 @@ Route::add('/signup', function () {
 
 Route::add('/leaderboard', function () {
     $userController = new UserController();
-    $topUsers[] = $userController->getUsersByPoints();
+    $topUsers = $userController->getUsersByPoints();
+
     require_once(__DIR__ . "/../views/pages/leaderboard.php");
 });
+
 
 Route::add('/profile', function () {
     $username = $_SESSION['user']['username'];

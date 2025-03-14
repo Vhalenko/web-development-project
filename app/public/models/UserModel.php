@@ -81,27 +81,36 @@ class UserModel extends BaseModel
     }
     
 
-    public function editUser(UserDto $user)
+    public function editUser(int $id, ?string $username, ?string $email, ?string $password): bool
     {
-        $query = "UPDATE user
-            SET username = :username,
-                email = :email,
-                password_hash = :password_hash,
-                streak_count = :streak_count,
-                total_tasks_completed = :total_tasks_completed,
-            WHERE user_id = :user_id";
+        $query = "UPDATE user SET ";
+        $params = [];
 
-        $stmt = self::$pdo->prepare($query);
+        if ($username !== null) {
+            $query .= "username = :username, ";
+            $params[':username'] = $username;
+        }
+        if ($email !== null) {
+            $query .= "email = :email, ";
+            $params[':email'] = $email;
+        }
+        if ($password !== null) {
+            $query .= "password_hash = :password, ";
+            $params[':password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
 
-        $stmt->bindParam(':username', $user->getUsername());
-        $stmt->bindParam(':email', $user->getEmail());
-        $stmt->bindParam(':streak_count', $user->getStreakCount());
-        $stmt->bindParam(':total_tasks_completed', $user->getTotalTasksCompleted());
+        $query = rtrim($query, ', ');
+
+        $query .= " WHERE user_id = :user_id";
+        $params[':user_id'] = $id;
+
+        $stmt = $this->pdo->prepare($query);
 
         try {
-            $stmt->execute();
+            return $stmt->execute($params);
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            echo "Error clearing reset token: " . $e->getMessage();
+            return false;
         }
     }
 
@@ -120,5 +129,30 @@ class UserModel extends BaseModel
             echo "Error: " . $e->getMessage();
             return false;
         }
+    }
+
+    public function getUserById($userId): ?UserDTO
+    {
+        $query = "SELECT * FROM user WHERE user_id = :userId";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':userId', $userId);
+
+        try {
+            $stmt->execute();
+            $user = $stmt->fetch();
+
+            if ($user) {
+                return new UserDTO(
+                    $user['user_id'],
+                    $user['username'],
+                    $user['email'],
+                    $user['streak_count'],
+                    $user['total_tasks_completed'],
+                );
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        return null;
     }
 }

@@ -29,32 +29,8 @@
             <h1 class="display-4 fw-bold">Gamify Your Life</h1>
             <p class="lead">Build habits, complete tasks, and achieve your goals while having fun.</p>
 
-            <!-- Sign-up Form -->
-            <form action="/signup" class="sign-up-form" id="signUpForm" method="POST">
-                <h2 class="display-8 fw-bold text-center">Sign up</h2>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username:</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username">
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password">
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <button id="signUpButton" type="submit" class="btn btn-primary">Sign up</button>
-                    <div>
-                        <label class="me-2">Already have an account?</label>
-                        <button type="button" class="btn btn-primary" onclick="toggleForm('login')">Login</button>
-                    </div>
-                </div>
-            </form>
-
             <!-- Login Form -->
-            <form action="/login" class="login-form d-none" id="loginForm" method="POST">
+            <form action="/login" class="login-form" id="loginForm" method="POST">
                 <h2 class="display-8 fw-bold text-center">Login</h2>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
@@ -68,7 +44,7 @@
                     <button id="loginButton" type="submit" class="btn btn-primary">Login</button>
                     <div>
                         <label class="me-2">Don't have an account?</label>
-                        <button type="button" class="btn btn-primary" onclick="toggleForm('signup')">Sign up</button>
+                        <a href="/signup-page" type="button" class="btn btn-primary">Sign up</a>
                     </div>
                 </div>
             </form>
@@ -78,18 +54,3 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/main.js"></script>
-
-<script>
-    function toggleForm(formType) {
-    const signUpForm = document.getElementById('signUpForm');
-    const loginForm = document.getElementById('loginForm');
-
-    if (formType === 'login') {
-        signUpForm.classList.add('d-none');
-        loginForm.classList.remove('d-none');
-    } else if (formType === 'signup') {
-        loginForm.classList.add('d-none');
-        signUpForm.classList.remove('d-none');
-    }
-}
-</script>

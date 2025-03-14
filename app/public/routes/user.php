@@ -6,7 +6,6 @@ Route::add('/login', function () {
         $userController = new UserController();
         $userController->login();
     }
-    require_once(__DIR__ . "/../views/pages/login.php");
 }, ['get', 'post']);
 
 Route::add('/logout', function () {
@@ -31,5 +30,24 @@ Route::add('/leaderboard', function () {
 });
 
 Route::add('/profile', function () {
+    $username = $_SESSION['user']['username'];
+    $email = $_SESSION['user']['email'];
+    $streakCount = $_SESSION['user']['streak_count'];
+    $totalTasksCompleted = $_SESSION['user']['total_tasks_completed'];
+
     require(__DIR__. "/../views/pages/profile.php");
 });
+
+Route::add('/manage-profile', function () {
+    $username = $_SESSION['user']['username'];
+    $email = $_SESSION['user']['email'];
+
+    require(__DIR__. "/../views/pages/manage_profile.php");
+});
+
+Route::add('/update-account', function () {
+    $userController = new UserController();
+    $userController->editUser();
+
+    require(__DIR__. "/../views/pages/manage_profile.php");
+}, ['get', 'post']);

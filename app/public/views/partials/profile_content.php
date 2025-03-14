@@ -3,11 +3,11 @@
         <div class="row justify-content-center">
             <div class="col-md-6 text-center">
                 <img src="https://via.placeholder.com/150" alt="Profile Picture" class="rounded-circle mb-3">
-                <h1 class="mb-3">John Doe</h1>
-                <p class="">johndoe@example.com</p>
+                <h1 class="mb-3"><?php echo $username?></h1>
+                <p class=""><?php echo $email?></p>
                 <p><strong>Achievements:</strong> 10 Badges, 45 Tasks Completed</p>
-                <a href="#" class="btn btn-primary">Edit Profile</a>
-                <a href="../pages/index.php" class="btn btn-outline-danger">Logout</a>
+                <a href="/manage-profile" class="btn btn-primary">Edit Profile</a>
+                <a href="/logout" class="btn btn-outline-danger">Logout</a>
             </div>
         </div>
         <hr class="my-4">
@@ -17,11 +17,11 @@
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Tasks Completed
-                        <span class="badge bg-success rounded-pill">45</span>
+                        <span class="badge bg-success rounded-pill"><?php echo $totalTasksCompleted?></span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Current Streak
-                        <span class="badge bg-primary rounded-pill">7 Days</span>
+                        <span class="badge bg-primary rounded-pill"><?php echo $streakCount?> Days</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Total Points

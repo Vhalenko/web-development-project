@@ -32,7 +32,7 @@
                         <!-- Submit Button -->
                         <div class="d-flex justify-content-between">
                             <button type="submit" name="submit" class="btn btn-primary">Save Changes</button>
-                            <a href="/" class="btn btn-outline-danger">Cancel</a>
+                            <a href="/profile" class="btn btn-outline-danger">Cancel</a>
                         </div>
                     </form>
                 </div>

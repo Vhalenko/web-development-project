@@ -10,8 +10,8 @@
                             <div>
                                 <strong><?= htmlspecialchars($task->getTitle()) ?></strong>
                                 <p class="text-muted mb-0">
-                                    Priority: <?= htmlspecialchars($task->getPriority()) ?> |
-                                    Deadline: <?= htmlspecialchars($task->getDeadline()) ?>
+                                    Priority: <?= htmlspecialchars($task->getPriority()->value) ?> |
+                                    Deadline: <?= htmlspecialchars($task->getDeadline()->format('Y-m-d')) ?>
                                 </p>
                             </div>
                             <div>
@@ -29,11 +29,11 @@
                 <form action="/add-task" method="POST">
                     <div class="mb-3">
                         <label for="taskTitle" class="form-label">Task Title</label>
-                        <input type="text" id="taskTitle" class="form-control" placeholder="Enter task title">
+                        <input type="text" id="taskTitle" name="title" class="form-control" placeholder="Enter task title" required>
                     </div>
                     <div class="mb-3">
                         <label for="priority" class="form-label">Priority</label>
-                        <select id="priority" class="form-select">
+                        <select id="priority" name="priority" class="form-select">
                             <option value="high">High</option>
                             <option value="medium">Medium</option>
                             <option value="low">Low</option>
@@ -41,11 +41,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="deadline" class="form-label">Deadline</label>
-                        <input type="date" id="deadline" class="form-control">
+                        <input type="date" id="deadline" name="deadline" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="taskDescription" class="form-label">Task Description</label>
-                        <input type="textarea" id="taskDescription" class="form-control" placeholder="Enter task title">
+                        <input type="textarea" id="taskDescription" name="description" class="form-control" placeholder="Enter task title">
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Add Task</button>
                 </form>

@@ -13,36 +13,51 @@ class TaskController
         $this->taskModel = new TaskModel();
     }
 
-    public function addTask() {
-        $userId = $_SESSION['user']['id'];
-        $title = $_POST['title'];
-        $description = $_POST['description'];
-        $priority = $_POST['priority'];
-        $deadline = $_POST['deadline'];
-        $creationDate = new DateTime('now');
-        $completionDate = null;
-        $isCompleted = false;
+    public function addTask()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_SESSION['user']['id'];
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $priority = $_POST['priority'];
+            $deadline = DateTime::createFromFormat('Y-m-d', $_POST['deadline']);
+            $creationDate = new DateTime('now');
+            $completionDate = null;
+            $isCompleted = false;
 
-        $this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted);
+            if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
+                header("Location: /tasks");
+            }
+            else {
+                echo "Error creting a task";
+            }
+        }
     }
 
-    public function removeTask(TaskDto $task) {
-        $this->taskModel->removeTask($task);
+    public function removeTask(int $taskId)
+    {
+        $this->taskModel->removeTask($taskId);
+        header("Location: /tasks");
     }
 
-    public function editTask(TaskDto $task) {
+    public function editTask(TaskDto $task)
+    {
         $this->taskModel->editTask($task);
     }
 
-    public function getTasksForUser(UserDto $user) {
-        return $this->taskModel->getTasksForUser($user);
+    public function getTasksForUser(int $userId)
+    {
+        return $this->taskModel->getTasksForUser($userId);
     }
 
-    public function getTask(int $id) {
+    public function getTask(int $id)
+    {
         return $this->taskModel->getTask($id);
     }
 
-    public function completeTask(int $id) {
+    public function completeTask(int $id)
+    {
         $this->taskModel->completeTask($id);
+        header("Location: /tasks");
     }
 }

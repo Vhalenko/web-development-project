@@ -1,5 +1,5 @@
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row justify-content-center w-100">
         <div class="col-md-6">
             <!-- Card for better UI -->
             <div class="card shadow-sm border-0">
@@ -12,15 +12,13 @@
                         <!-- Username -->
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username"
-                                value="<?php echo $username ?>" required>
+                            <input type="text" class="form-control" id="username" name="username" value="<?php echo $username ?>" required>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                value="<?php echo $email ?>" required>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo $email ?>" required>
                         </div>
 
                         <!-- Password -->
@@ -40,3 +38,6 @@
         </div>
     </div>
 </div>
+
+<!-- Optional: Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>

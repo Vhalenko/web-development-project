@@ -12,4 +12,5 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <script src="/app//public//assets//js//main.js"></script>
 </head>
+
 <body>

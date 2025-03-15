@@ -19,7 +19,7 @@ Route::add('/add-task', function () {
     $taskController->addTask();
 }, ['get', 'post']);
 
-Route::add('/edit-task([0-9]*)', function ($id) {
+Route::add('/edit-task/([0-9]*)', function ($id) {
     $taskController = new TaskController();
     $task = $taskController->getTask($id);
     $taskController->editTask($task);

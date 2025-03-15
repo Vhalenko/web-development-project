@@ -23,9 +23,11 @@ class UserController
                 $_SESSION['user'] = [
                     'id' => $userDTO->getUserId(),
                     'username' => $userDTO->getUsername(),
+                    'fullName' => $userDTO->getFullName(),
                     'email' => $userDTO->getEmail(),
                     'streak_count' => $userDTO->getStreakCount(),
-                    'total_tasks_completed' => $userDTO->getTotalTasksCompleted()
+                    'total_tasks_completed' => $userDTO->getTotalTasksCompleted(),
+                    'last_completed_task' => $userDTO->getLastCompletedTask()
                 ];
                 header("Location: /profile");
             } else {
@@ -46,6 +48,7 @@ class UserController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = htmlspecialchars($_POST['username']);
+            $fullName = htmlspecialchars($_POST['fullName']);
             $email = htmlspecialchars($_POST['email']);
             $password = $_POST['password'];
 
@@ -55,7 +58,8 @@ class UserController
             }
 
             try {
-                $this->userModel->addUser($username, $email, $password, 0, 0);
+                $this->userModel->addUser($username, $fullName, $email, $password, 0, 0, 0, null);
+                header("Location: /login-page");
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
                 exit;
@@ -72,6 +76,7 @@ class UserController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = ($_POST['username']);
+            $fullName = ($_POST['fullName']);
             $email = $_POST['email'];
             $password = $_POST['password'];
             if (empty($password)) {
@@ -79,7 +84,7 @@ class UserController
             }
             $userId = $_SESSION['user']['id'];
 
-            if ($this->userModel->editUser($userId, $username, $email, $password)) {
+            if ($this->userModel->editUser($userId, $username, $fullName, $email, $password)) {
                 try {
                     $this->updateSession($userId);
                     header("Location: /profile");
@@ -101,6 +106,7 @@ class UserController
             $_SESSION['user'] = [
                 'id' => $userDTO->getUserId(),
                 'username' => $userDTO->getUsername(),
+                'fullName' => $userDTO->getFullName(),
                 'email' => $userDTO->getEmail(),
                 'streak_count' => $userDTO->getStreakCount(),
                 'total_tasks_completed' => $userDTO->getTotalTasksCompleted()

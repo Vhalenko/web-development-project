@@ -18,11 +18,13 @@ class UserModel extends BaseModel
         foreach ($topUsers as $topUser) {
             $users[] = new UserDto(
                 $topUser['user_id'],              
-                $topUser['username'],                   
+                $topUser['username'],   
+                $topUser['full_name'],                
                 $topUser['email'],                       
                 $topUser['streak_count'],          
                 $topUser['total_tasks_completed'], 
-                $topUser['total_points']          
+                $topUser['total_points'] ,
+                $topUser['last_completed_task']         
             );
         }
 
@@ -30,24 +32,26 @@ class UserModel extends BaseModel
     }
 
 
-    public function addUser(string $username, string $email, string $password, int $streakCount, int $totalTasksCompleted): ?bool
+    public function addUser(string $username, ?string $fullName, string $email, string $password, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask): ?bool
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $query = "INSERT INTO user (username, email, password_hash, streak_count, total_tasks_completed)
-                  VALUES (:username, :email, :password_hash, :streak_count, :total_tasks_completed)";
+        $query = "INSERT INTO user (username, full_name, email, password_hash, streak_count, total_points, total_tasks_completed, last_completed_task)
+                  VALUES (:username, :full_name, :email, :password_hash, :streak_count, :total_points, :total_tasks_completed, :last_completed_task)";
 
         $stmt = $this->pdo->prepare($query);
 
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':full_name', $fullName);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password_hash', $hashedPassword);
         $stmt->bindParam(':streak_count', $streakCount);
+        $stmt->bindParam(':total_points', $totalPoints);
         $stmt->bindParam(':total_tasks_completed', $totalTasksCompleted);
+        $stmt->bindParam(':last_completed_task', $lastCompletedTask);
 
         try {
             $stmt->execute();
-            echo "CHLENN!!!";
             return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -68,12 +72,14 @@ class UserModel extends BaseModel
         if ($user && password_verify($password, $user['password_hash'])) {
             try {
                 return new UserDto(
-                    $user['user_id'],
-                    $user['username'],
-                    $user['email'],
-                    $user['streak_count'],
-                    $user['total_tasks_completed'],
-                    $user['total_points']
+                    $user['user_id'],              
+                    $user['username'],   
+                    $user['full_name'],                
+                    $user['email'],                       
+                    $user['streak_count'],          
+                    $user['total_tasks_completed'], 
+                    $user['total_points'] ,
+                    $user['last_completed_task']         
                 );
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
@@ -83,7 +89,7 @@ class UserModel extends BaseModel
     }
 
 
-    public function editUser(int $id, ?string $username, ?string $email, ?string $password): bool
+    public function editUser(int $id, ?string $username, ?string $fullName, ?string $email, ?string $password): bool
     {
         $query = "UPDATE user SET ";
         $params = [];
@@ -91,6 +97,10 @@ class UserModel extends BaseModel
         if ($username !== null) {
             $query .= "username = :username, ";
             $params[':username'] = $username;
+        }
+        if ($fullName !== null) {
+            $query .= "full_name = :full_name, ";
+            $params[':full_name'] = $fullName;
         }
         if ($email !== null) {
             $query .= "email = :email, ";
@@ -148,13 +158,15 @@ class UserModel extends BaseModel
             $user = $stmt->fetch();
 
             if ($user) {
-                return new UserDTO(
-                    $user['user_id'],
-                    $user['username'],
-                    $user['email'],
-                    $user['streak_count'],
-                    $user['total_tasks_completed'],
-                    $user['total_points']
+                return new UserDto(
+                    $user['user_id'],              
+                    $user['username'],   
+                    $user['full_name'],                
+                    $user['email'],                       
+                    $user['streak_count'],          
+                    $user['total_tasks_completed'], 
+                    $user['total_points'] ,
+                    $user['last_completed_task']         
                 );
             }
         } catch (Exception $e) {

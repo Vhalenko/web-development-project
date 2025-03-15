@@ -82,6 +82,11 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="fullName" class="form-label">Full name:</label>
+                    <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your username" required>
+                </div>
+
+                <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
                 </div>

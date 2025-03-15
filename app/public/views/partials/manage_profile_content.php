@@ -15,6 +15,12 @@
                             <input type="text" class="form-control" id="username" name="username" value="<?php echo $username ?>" required>
                         </div>
 
+                        <!-- full name -->
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" value="<?php echo $fullName ?>" required>
+                        </div>
+
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>

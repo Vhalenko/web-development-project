@@ -27,8 +27,7 @@ class TaskController
 
             if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
                 header("Location: /tasks");
-            }
-            else {
+            } else {
                 echo "Error creting a task";
             }
         }
@@ -40,9 +39,15 @@ class TaskController
         header("Location: /tasks");
     }
 
-    public function editTask(TaskDto $task)
+    public function editTask(int $taskId)
     {
-        $this->taskModel->editTask($task);
+        $title = $_POST['title'];
+        $description = $_POST['description'];
+        $priority = $_POST['priority'];
+        $deadline = DateTime::createFromFormat('Y-m-d', $_POST['deadline']);
+        
+        $this->taskModel->editTask($taskId, $title, $description, $priority, $deadline);
+        header("Location: /tasks");
     }
 
     public function getTasksForUser(int $userId)

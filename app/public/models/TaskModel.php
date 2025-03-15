@@ -63,39 +63,36 @@ class TaskModel extends BaseModel {
         }
     }
 
-    public function editTask($task) {
-        $query = "UPDATE task
-            SET user_id = :user_id,
-                title = :title,
-                description = :description,
-                category = :category,
-                priority = :priority,
-                deadline = :deadline,
-                creation_date = :creation_date,
-                completion_date = :completion_date,
-                is_completed = :is_completed,
-                streak_contribution = :streak_contribution
-            WHERE task_id = :task_id";
-
-        $stmt = self::$pdo->prepare($query);
-        
-        $stmt->bindParam(':task_id', $task->getTaskId());
-        $stmt->bindParam(':user_id', $task->getUserId());
-        $stmt->bindParam(':title', $task->getTitle());
-        $stmt->bindParam(':description', $task->getDescription());
-        $stmt->bindParam(':priority', $task->getPriority());
-        $stmt->bindParam(':deadline', $task->getDeadline());
-        $stmt->bindParam(':creation_date', $task->getCreationDate());
-        $stmt->bindParam(':completion_date', $task->getCompletionDate());
-        $stmt->bindParam(':is_completed', $task->getIsCompleted());
-        $stmt->bindParam(':streak_contribution', $task->getStreakContribution());
-
+    public function editTask(int $taskId, string $title, ?string $description, string $priority, DateTime $deadline) {
+        $query = "UPDATE task SET title = :title, priority = :priority, deadline = :deadline, ";
+    
+        $params = [
+            ':title' => $title,
+            ':priority' => $priority,
+            ':deadline' => $deadline->format('Y-m-d'),
+        ];
+    
+        if ($description !== null) {
+            $query .= "description = :description";
+            $params[':description'] = $description;
+        }
+    
+        $query .= " WHERE task_id = :task_id";
+        $params[':task_id'] = $taskId;
+    
+        $stmt = $this->pdo->prepare($query);
+    
+        foreach ($params as $param => $value) {
+            $stmt->bindValue($param, $value);
+        }
+    
         try {
             $stmt->execute();
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
     }
+    
 
     public function getTasksForUser(int $userId) {
         $stmt = $this->pdo->prepare("SELECT * FROM task WHERE user_id = :user_id AND is_completed = 0");

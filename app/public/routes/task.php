@@ -21,11 +21,9 @@ Route::add('/add-task', function () {
 
 Route::add('/edit-task/([0-9]*)', function ($id) {
     $taskController = new TaskController();
-    $task = $taskController->getTask($id);
-    $taskController->editTask($task);
+    $taskController->editTask($id);
 
-    require_once(__DIR__ . "/../views/pages/tasks.php");
-});
+}, ['get', 'post']);
 
 Route::add('/complete-task/([0-9]*)', function ($id) {
     $taskController = new TaskController();

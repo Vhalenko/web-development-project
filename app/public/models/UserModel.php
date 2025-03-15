@@ -108,6 +108,10 @@ class UserModel extends BaseModel
 
         $stmt = $this->pdo->prepare($query);
 
+        foreach ($params as $param => $value) {
+            $stmt->bindValue($param, $value);
+        }
+
         try {
             return $stmt->execute($params);
         } catch (Exception $e) {

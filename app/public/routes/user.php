@@ -1,11 +1,10 @@
 <?php
 require_once(__DIR__ . "../../controllers/UserController.php");
+require_once(__DIR__ . "../../controllers/TaskController.php");
 
 Route::add('/login', function () {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $userController = new UserController();
-        $userController->login();
-    }
+    $userController = new UserController();
+    $userController->login();
 }, ['get', 'post']);
 
 Route::add('/logout', function () {
@@ -15,10 +14,8 @@ Route::add('/logout', function () {
 });
 
 Route::add('/signup', function () {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $userController = new UserController();
-        $userController->signUp();
-    }
+    $userController = new UserController();
+    $userController->signUp();
 }, ['get', 'post']);
 
 Route::add('/leaderboard', function () {
@@ -30,26 +27,26 @@ Route::add('/leaderboard', function () {
 
 
 Route::add('/profile', function () {
-    $username = $_SESSION['user']['username'];
-    $fullName = $_SESSION['user']['fullName'];
-    $email = $_SESSION['user']['email'];
-    $streakCount = $_SESSION['user']['streak_count'];
-    $totalTasksCompleted = $_SESSION['user']['total_tasks_completed'];
+    $userController = new UserController();
+    $taskController = new TaskController();
 
-    require(__DIR__. "/../views/pages/profile.php");
+    $user = $userController->getUserById($_SESSION['user']['id']);
+    $completedTasks = $taskController->getCompletedTasksForUser($user->getUserId());
+    $uncumpletedTasks = $taskController->getUncompletedTasksForUser($user->getUserId());
+
+    require(__DIR__ . "/../views/pages/profile.php");
 });
 
 Route::add('/manage-profile', function () {
-    $username = $_SESSION['user']['username'];
-    $fullName = $_SESSION['user']['fullName'];
-    $email = $_SESSION['user']['email'];
+    $userController = new UserController();
+    $user = $userController->getUserById($_SESSION['user']['id']);
 
-    require(__DIR__. "/../views/pages/manage_profile.php");
+    require(__DIR__ . "/../views/pages/manage_profile.php");
 });
 
 Route::add('/update-account', function () {
     $userController = new UserController();
     $userController->editUser();
 
-    require(__DIR__. "/../views/pages/manage_profile.php");
+    require(__DIR__ . "/../views/pages/manage_profile.php");
 }, ['get', 'post']);

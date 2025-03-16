@@ -10,7 +10,7 @@ class UserDto {
     private int $totalPoints;
     private ?DateTime $lastCompletedTask;
 
-    public function __construct(int $userId, string $username, ?string $fullName, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?string $lastCompletedTask) {
+    public function __construct(int $userId, string $username, ?string $fullName, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask) {
         $this->userId = $userId;
         $this->username = $username;
         $this->fullName = $fullName;

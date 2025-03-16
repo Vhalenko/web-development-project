@@ -1,10 +1,10 @@
 <?php
 require_once(__DIR__ . "../../controllers/TaskController.php");
+require_once(__DIR__ . "../../controllers/UserController.php");
 
 Route::add('/tasks', function () {
-    $userId = $_SESSION['user']['id'];
     $taskController = new TaskController();
-    $tasks = $taskController->getTasksForUser($userId);
+    $tasks = $taskController->getUncompletedTasksForUser();
 
     require_once(__DIR__ . "/../views/pages/tasks.php");
 });
@@ -27,5 +27,9 @@ Route::add('/edit-task/([0-9]*)', function ($id) {
 
 Route::add('/complete-task/([0-9]*)', function ($id) {
     $taskController = new TaskController();
+    $userController = new UserController();
+
+    $userController->rewardUser();
     $taskController->completeTask($id);
+    
 });

@@ -27,11 +27,12 @@ class UserController
                     'email' => $userDTO->getEmail(),
                     'streak_count' => $userDTO->getStreakCount(),
                     'total_tasks_completed' => $userDTO->getTotalTasksCompleted(),
-                    'last_completed_task' => $userDTO->getLastCompletedTask()
+                    'last_completed_task' => $userDTO->getLastCompletedTask(),
+                    'total_points' => $userDTO->getTotalPoints()
                 ];
                 header("Location: /profile");
             } else {
-                exit;
+                echo "<script>alert('login failed');</script>";
             }
         }
     }
@@ -109,10 +110,37 @@ class UserController
                 'fullName' => $userDTO->getFullName(),
                 'email' => $userDTO->getEmail(),
                 'streak_count' => $userDTO->getStreakCount(),
-                'total_tasks_completed' => $userDTO->getTotalTasksCompleted()
+                'total_tasks_completed' => $userDTO->getTotalTasksCompleted(),
+                'last_completed_task' => $userDTO->getLastCompletedTask(),
+                'total_points' => $userDTO->getTotalPoints()
             ];
         } else {
             echo "Error updating a session";
         }
+    }
+
+    public function rewardUser() {
+        $user = $this->getUserById($_SESSION['user']['id']);
+        $streak = $user->getStreakCount();
+        $points = $user->getTotalPoints();
+        $lastCompletedTask = $user->getLastCompletedTask();
+        
+        $points = $points + 10;
+        if ($lastCompletedTask->format('Y-m-d') != (new DateTime('today'))->format('Y-m-d')) {
+            if ($lastCompletedTask->format('Y-m-d') === (new DateTime('today'))->modify('-1 day')->format('Y-m-d')) {
+                $streak = $streak + 1;
+            } else {
+                $streak = 0;
+            }
+        }
+        $lastCompletedTask = new DateTime('now');
+
+        $this->userModel->rewardUser($user->getUserId(), $streak, $points, $lastCompletedTask);
+
+        $this->updateSession($user->getUserId());
+    }
+
+    public function getUserById(int $id) :UserDto {
+        return $this->userModel->getUserById($id);
     }
 }

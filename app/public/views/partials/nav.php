@@ -1,3 +1,9 @@
+<?php
+require_once(__DIR__ . "/../../controllers/UserController.php");
+$userController = new UserController();
+$user = $userController->getUserById($_SESSION['user']['id']);
+?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
     <div class="container d-flex align-items-center">
         <!-- Logo with a fixed height to maintain aspect ratio -->
@@ -19,7 +25,7 @@
                 </li>
                 <li class="nav-item d-flex align-items-center ms-3">
                     <img class="coin-icon" src="../../assets/img/coin.png" alt="Coins">
-                    <span class="ms-2 text-light">100</span> <!-- Example coin count -->
+                    <span class="ms-2 text-light"><?= $user->getTotalPoints()?></span> <!-- Example coin count -->
                 </li>
             </ul>
         </div>

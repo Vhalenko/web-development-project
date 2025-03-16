@@ -16,6 +16,7 @@ class UserModel extends BaseModel
         $users = [];
 
         foreach ($topUsers as $topUser) {
+            $lastCompletedTask = new DateTime($topUser['last_completed_task']);
             $users[] = new UserDto(
                 $topUser['user_id'],              
                 $topUser['username'],   
@@ -24,7 +25,7 @@ class UserModel extends BaseModel
                 $topUser['streak_count'],          
                 $topUser['total_tasks_completed'], 
                 $topUser['total_points'] ,
-                $topUser['last_completed_task']         
+                $lastCompletedTask        
             );
         }
 
@@ -71,6 +72,7 @@ class UserModel extends BaseModel
 
         if ($user && password_verify($password, $user['password_hash'])) {
             try {
+                $lastCompletedTask = new DateTime($user['last_completed_task']);
                 return new UserDto(
                     $user['user_id'],              
                     $user['username'],   
@@ -79,7 +81,7 @@ class UserModel extends BaseModel
                     $user['streak_count'],          
                     $user['total_tasks_completed'], 
                     $user['total_points'] ,
-                    $user['last_completed_task']         
+                    $lastCompletedTask         
                 );
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
@@ -158,6 +160,7 @@ class UserModel extends BaseModel
             $user = $stmt->fetch();
 
             if ($user) {
+                $lastCompletedTask = new DateTime($user['last_completed_task']);
                 return new UserDto(
                     $user['user_id'],              
                     $user['username'],   
@@ -166,12 +169,30 @@ class UserModel extends BaseModel
                     $user['streak_count'],          
                     $user['total_tasks_completed'], 
                     $user['total_points'] ,
-                    $user['last_completed_task']         
+                    $lastCompletedTask         
                 );
             }
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
         return null;
+    }
+
+    public function rewardUser(int $userId, int $streakCount, int $totalPoints, DateTime $lastCompletedTask): ?bool {
+        $query = "UPDATE user SET streak_count = :streak_count, total_points = :total_points, last_completed_task = :last_completed_task WHERE user_id = :user_id";
+
+        $lastCompletedTaskStr = $lastCompletedTask->format('Y-m-d');
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':streak_count', $streakCount);
+        $stmt->bindParam(':total_points', $totalPoints);
+        $stmt->bindParam(':last_completed_task', $lastCompletedTaskStr);
+        $stmt->bindParam(':user_id', $userId);
+
+        try {
+            return $stmt->execute();
+        } catch (Exception $e) {
+            echo "Error clearing reset token: " . $e->getMessage();
+            return false;
+        }
     }
 }

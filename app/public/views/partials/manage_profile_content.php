@@ -12,19 +12,19 @@
                         <!-- Username -->
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" value="<?php echo $username ?>" required>
+                            <input type="text" class="form-control" id="username" name="username" value="<?php echo $user->getUsername() ?>" required>
                         </div>
 
                         <!-- full name -->
                         <div class="mb-3">
                             <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName" value="<?php echo $fullName ?>" required>
+                            <input type="text" class="form-control" id="fullName" name="fullName" value="<?php echo $user->getFullName() ?>" required>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo $email ?>" required>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo $user->getEmail() ?>" required>
                         </div>
 
                         <!-- Password -->

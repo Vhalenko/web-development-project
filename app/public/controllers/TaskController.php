@@ -25,6 +25,11 @@ class TaskController
             $completionDate = null;
             $isCompleted = false;
 
+            if($creationDate > $deadline) {
+                echo "Wrong deadline";
+                exit;
+            }
+
             if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
                 header("Location: /tasks");
             } else {
@@ -50,9 +55,15 @@ class TaskController
         header("Location: /tasks");
     }
 
-    public function getTasksForUser(int $userId)
+    public function getUncompletedTasksForUser()
     {
-        return $this->taskModel->getTasksForUser($userId);
+        $userId = $_SESSION['user']['id'];
+        return $this->taskModel->getUncompletedTasksForUser($userId);
+    }
+
+    public function getCompletedTasksForUser(int $userId)
+    {
+        return $this->taskModel->getCompletedTasksForUser($userId);
     }
 
     public function getTask(int $id)

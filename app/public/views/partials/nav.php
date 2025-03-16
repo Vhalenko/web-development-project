@@ -15,6 +15,9 @@ $user = $userController->getUserById($_SESSION['user']['id']);
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto d-flex align-items-center">
                 <li class="nav-item">
+                    <a class="nav-link" href="/store">Store</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/tasks">Tasks</a>
                 </li>
                 <li class="nav-item">
@@ -25,10 +28,9 @@ $user = $userController->getUserById($_SESSION['user']['id']);
                 </li>
                 <li class="nav-item d-flex align-items-center ms-3">
                     <img class="coin-icon" src="../../assets/img/coin.png" alt="Coins">
-                    <span class="ms-2 text-light total-points"><?= $user->getTotalPoints()?></span> <!-- Example coin count -->
+                    <span class="ms-2 text-light total-points"><?= $user->getTotalPoints() ?></span> <!-- Example coin count -->
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-

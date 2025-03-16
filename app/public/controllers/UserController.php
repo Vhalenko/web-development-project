@@ -28,7 +28,8 @@ class UserController
                     'streak_count' => $userDTO->getStreakCount(),
                     'total_tasks_completed' => $userDTO->getTotalTasksCompleted(),
                     'last_completed_task' => $userDTO->getLastCompletedTask(),
-                    'total_points' => $userDTO->getTotalPoints()
+                    'total_points' => $userDTO->getTotalPoints(),
+                    'selected_avatar' => $userDTO->getSelectedAvatar()
                 ];
                 header("Location: /profile");
             } else {
@@ -80,12 +81,13 @@ class UserController
             $fullName = ($_POST['fullName']);
             $email = $_POST['email'];
             $password = $_POST['password'];
+            $selectedAvatar = $_POST['selected_avatar'];
             if (empty($password)) {
                 $password = null;
             }
             $userId = $_SESSION['user']['id'];
 
-            if ($this->userModel->editUser($userId, $username, $fullName, $email, $password)) {
+            if ($this->userModel->editUser($userId, $username, $fullName, $email, $password, $selectedAvatar, null)) {
                 try {
                     $this->updateSession($userId);
                     header("Location: /profile");
@@ -112,7 +114,8 @@ class UserController
                 'streak_count' => $userDTO->getStreakCount(),
                 'total_tasks_completed' => $userDTO->getTotalTasksCompleted(),
                 'last_completed_task' => $userDTO->getLastCompletedTask(),
-                'total_points' => $userDTO->getTotalPoints()
+                'total_points' => $userDTO->getTotalPoints(),
+                'selected_avatar' => $userDTO->getSelectedAvatar()
             ];
         } else {
             echo "Error updating a session";

@@ -24,6 +24,8 @@ require_once(__DIR__ . "/lib/Route.php");
 require_once(__DIR__ . "/routes/index.php");
 require_once(__DIR__ . "/routes/user.php");
 require_once(__DIR__ . "/routes/task.php");
+require_once(__DIR__ . "/routes/storeItem.php");
+require_once(__DIR__ . "/routes/purchase.php");
 
 // Start the router, enabling handling requests
 Route::run();

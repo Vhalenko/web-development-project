@@ -26,7 +26,8 @@ class UserModel extends BaseModel
                 $topUser['streak_count'],          
                 $topUser['total_tasks_completed'], 
                 $topUser['total_points'] ,
-                $lastCompletedTask        
+                $lastCompletedTask,
+                $topUser['selected_avatar']        
             );
         }
 
@@ -82,7 +83,8 @@ class UserModel extends BaseModel
                     $user['streak_count'],          
                     $user['total_tasks_completed'], 
                     $user['total_points'] ,
-                    $lastCompletedTask         
+                    $lastCompletedTask,
+                    $user['selected_avatar']          
                 );
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
@@ -92,7 +94,7 @@ class UserModel extends BaseModel
     }
 
 
-    public function editUser(int $id, ?string $username, ?string $fullName, ?string $email, ?string $password): bool
+    public function editUser(int $id, ?string $username, ?string $fullName, ?string $email, ?string $password, ?string $selectedAvatar, ?int $totalPoints): bool
     {
         $query = "UPDATE user SET ";
         $params = [];
@@ -112,6 +114,14 @@ class UserModel extends BaseModel
         if ($password !== null) {
             $query .= "password_hash = :password, ";
             $params[':password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+        if ($selectedAvatar !== null) {
+            $query .= "selected_avatar = :selected_avatar, ";
+            $params[':selected_avatar'] = $selectedAvatar;
+        }
+        if ($totalPoints !== null) {
+            $query .= "total_points = :total_points, ";
+            $params[':total_points'] = $totalPoints;
         }
 
         $query = rtrim($query, ', ');
@@ -170,7 +180,8 @@ class UserModel extends BaseModel
                     $user['streak_count'],          
                     $user['total_tasks_completed'], 
                     $user['total_points'] ,
-                    $lastCompletedTask         
+                    $lastCompletedTask,
+                    $user['selected_avatar']          
                 );
             }
         } catch (Exception $e) {

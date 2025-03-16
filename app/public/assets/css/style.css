@@ -99,4 +99,14 @@ table {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-  }
+}
+
+.store-item-card {
+    border: 2px solid white; 
+    border-radius: 10px; 
+    padding: 20px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.332); 
+    backdrop-filter: blur(10px);
+    background: transparent; /* Ensure background is transparent */
+    margin: 10px;
+}

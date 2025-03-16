@@ -9,8 +9,9 @@ class UserDto {
     private int $totalTasksCompleted;
     private int $totalPoints;
     private ?DateTime $lastCompletedTask;
+    private ?string $selectedAvatar;
 
-    public function __construct(int $userId, string $username, ?string $fullName, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask) {
+    public function __construct(int $userId, string $username, ?string $fullName, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask, ?string $selectedAvatar) {
         $this->userId = $userId;
         $this->username = $username;
         $this->fullName = $fullName;
@@ -19,6 +20,7 @@ class UserDto {
         $this->totalTasksCompleted = $totalTasksCompleted;
         $this->totalPoints = $totalPoints;
         $this->lastCompletedTask = $lastCompletedTask;
+        $this->selectedAvatar = $selectedAvatar;
     }
 
     // Getters and Setters
@@ -76,5 +78,12 @@ class UserDto {
     }
     public function setLastCompletedTask($lastCompletedTask) {
         $this->lastCompletedTask = $lastCompletedTask;
+    }
+
+    public function getSelectedAvatar() :?string {
+        return $this->selectedAvatar;
+    }
+    public function setSelectedAvatar(string $selectedAvatar) {
+        $this->selectedAvatar = $selectedAvatar;
     }
 }

@@ -39,7 +39,6 @@
                     <h3 class="fw-bold mb-3">Task Management</h3>
                     <img src="../../assets/img/Time-management-img.jpg" alt="Task Management" class="img-fluid rounded mb-3 feature-img">
                     <p>Organize your tasks into categories, set deadlines, and prioritize effectively to stay productive.</p>
-                    <a href="/features#task-management" class="btn btn-outline-primary mt-3">Learn More</a>
                 </div>
             </div>
 
@@ -50,7 +49,6 @@
                     <h3 class="fw-bold mb-3">Gamification</h3>
                     <img src="../../assets/img/Gamification-img.jpg" alt="Gamification" class="img-fluid rounded mb-3 feature-img">
                     <p>Earn rewards, complete challenges, and track your progress with exciting gamification features.</p>
-                    <a href="/features#gamification" class="btn btn-outline-success mt-3">Explore More</a>
                 </div>
             </div>
 
@@ -61,7 +59,6 @@
                     <h3 class="fw-bold mb-3">Collaboration</h3>
                     <img src="../../assets/img/Collaboration-img.jpg" alt="Collaboration" class="img-fluid rounded mb-3 feature-img">
                     <p>Work together with friends, share tasks, and achieve your goals as a team.</p>
-                    <a href="/features#collaboration" class="btn btn-outline-danger mt-3">Join Now</a>
                 </div>
             </div>
         </div>

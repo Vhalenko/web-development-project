@@ -1,6 +1,8 @@
 <?php
 require_once(__DIR__ . "../../controllers/UserController.php");
 require_once(__DIR__ . "../../controllers/TaskController.php");
+require_once(__DIR__ . "../../controllers/StoreItemController.php");
+require_once(__DIR__ . "../../controllers/PurchaseController.php");
 
 Route::add('/login', function () {
     $userController = new UserController();
@@ -39,7 +41,10 @@ Route::add('/profile', function () {
 
 Route::add('/manage-profile', function () {
     $userController = new UserController();
+    $purchaseController = new PurchaseController();
+
     $user = $userController->getUserById($_SESSION['user']['id']);
+    $purchases = $purchaseController->getPurchasesForUser($user->getUserId());
 
     require(__DIR__ . "/../views/pages/manage_profile.php");
 });

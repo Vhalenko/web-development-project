@@ -123,9 +123,11 @@ class UserController
         $user = $this->getUserById($_SESSION['user']['id']);
         $streak = $user->getStreakCount();
         $points = $user->getTotalPoints();
+        $totalTasksCompleted = $user->getTotalTasksCompleted();
         $lastCompletedTask = $user->getLastCompletedTask();
         
         $points = $points + 10;
+        $totalTasksCompleted += 1;
         if ($lastCompletedTask->format('Y-m-d') != (new DateTime('today'))->format('Y-m-d')) {
             if ($lastCompletedTask->format('Y-m-d') === (new DateTime('today'))->modify('-1 day')->format('Y-m-d')) {
                 $streak = $streak + 1;
@@ -135,7 +137,7 @@ class UserController
         }
         $lastCompletedTask = new DateTime('now');
 
-        $this->userModel->rewardUser($user->getUserId(), $streak, $points, $lastCompletedTask);
+        $this->userModel->rewardUser($user->getUserId(), $streak, $points, $totalTasksCompleted, $lastCompletedTask);
 
         $this->updateSession($user->getUserId());
     }

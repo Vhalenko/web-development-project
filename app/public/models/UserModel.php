@@ -7,7 +7,7 @@ class UserModel extends BaseModel
 {
     public function getUsersByPoints(): array
     {
-        $query = "SELECT * FROM user ORDER BY total_points DESC LIMIT 50";
+        $query = "SELECT * FROM user ORDER BY streak_count DESC LIMIT 50";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
 
@@ -16,7 +16,8 @@ class UserModel extends BaseModel
         $users = [];
 
         foreach ($topUsers as $topUser) {
-            $lastCompletedTask = new DateTime($topUser['last_completed_task']);
+            $lastCompletedTask = isset($topUser['last_completed_task']) && !empty($topUser['last_completed_task']) ? new DateTime($topUser['last_completed_task']) : null;
+
             $users[] = new UserDto(
                 $topUser['user_id'],              
                 $topUser['username'],   
@@ -178,13 +179,14 @@ class UserModel extends BaseModel
         return null;
     }
 
-    public function rewardUser(int $userId, int $streakCount, int $totalPoints, DateTime $lastCompletedTask): ?bool {
-        $query = "UPDATE user SET streak_count = :streak_count, total_points = :total_points, last_completed_task = :last_completed_task WHERE user_id = :user_id";
+    public function rewardUser(int $userId, int $streakCount, int $totalPoints, int $totalTasksCompleted, DateTime $lastCompletedTask): ?bool {
+        $query = "UPDATE user SET streak_count = :streak_count, total_points = :total_points, total_tasks_completed = :total_tasks_completed, last_completed_task = :last_completed_task WHERE user_id = :user_id";
 
         $lastCompletedTaskStr = $lastCompletedTask->format('Y-m-d');
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':streak_count', $streakCount);
         $stmt->bindParam(':total_points', $totalPoints);
+        $stmt->bindParam(':total_tasks_completed', $totalTasksCompleted);
         $stmt->bindParam(':last_completed_task', $lastCompletedTaskStr);
         $stmt->bindParam(':user_id', $userId);
 

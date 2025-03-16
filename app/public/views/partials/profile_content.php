@@ -5,7 +5,6 @@
                 <h1 class="mb-3"><?php echo $user->getUsername()?></h1>
                 <h2 class=""><?php echo $user->getFullName()?></h2>
                 <p class=""><?php echo $user->getEmail()?></p>
-                <p><strong>Achievements:</strong> 10 Badges, 45 Tasks Completed</p>
                 <a href="/manage-profile" class="btn btn-primary">Edit Profile</a>
                 <a href="/logout" class="btn btn-outline-danger">Logout</a>
             </div>
@@ -19,11 +18,6 @@
         </div>
         <div class="col-md-6">
             <canvas id="streakChart"></canvas>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <canvas id="pointsChart"></canvas>
         </div>
     </div>
 </div>
@@ -56,19 +50,6 @@
             }]
         },
         options: { responsive: true }
-    });
-
-    new Chart(document.getElementById('pointsChart'), {
-        type: 'line',
-        data: {
-            labels: ['Total Points'],
-            datasets: [{
-                data: [totalPoints],
-                borderColor: '#ffc107',
-                backgroundColor: 'rgba(255, 193, 7, 0.2)',
-                fill: true
-            }]
-        }
     });
 </script>
 

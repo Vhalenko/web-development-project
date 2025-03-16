@@ -17,7 +17,7 @@
             <button id="loginButton" type="submit" class="btn btn-primary">Login</button>
             <div>
                 <label class="me-2">Don't have an account?</label>
-                <a href="/#signUpForm" class="btn btn-outline-secondary">Sign up</a>
+                <a href="/#signUpForm" class="btn btn-outline-primary">Sign up</a>
             </div>
         </div>
     </form>

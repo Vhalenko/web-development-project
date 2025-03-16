@@ -55,17 +55,6 @@ class TaskController
         header("Location: /tasks");
     }
 
-    public function getUncompletedTasksForUser()
-    {
-        $userId = $_SESSION['user']['id'];
-        return $this->taskModel->getUncompletedTasksForUser($userId);
-    }
-
-    public function getCompletedTasksForUser(int $userId)
-    {
-        return $this->taskModel->getCompletedTasksForUser($userId);
-    }
-
     public function getTask(int $id)
     {
         return $this->taskModel->getTask($id);
@@ -76,4 +65,60 @@ class TaskController
         $this->taskModel->completeTask($id);
         header("Location: /tasks");
     }
+
+    public function getAllTasks() {
+        $userId = $_SESSION['user']['id'];
+        return $this->taskModel->getTasksForUser($userId);
+    }
+
+    public function getUncompletedTasks()
+    {
+        $tasks = $this->getAllTasks();
+
+        $uncompletedTasks = array_filter($tasks, function($task) {
+            return !$task->getIsCompleted();
+        });
+
+        return $uncompletedTasks;
+    }
+
+    public function getCompletedTasks()
+    {
+        $tasks = $this->getAllTasks();
+
+        $completedTasks = array_filter($tasks, function($task) {
+            return $task->getIsCompleted();
+        });
+
+        return $completedTasks;
+    }
+
+    public function sortTasksByDeadline(array $tasks): array {
+        usort($tasks, function($a, $b) {
+            if ($a->getDeadline() == $b->getDeadline()) {
+                return 0;
+            }
+            return ($a->getDeadline() < $b->getDeadline()) ? -1 : 1;
+        });
+
+        return $tasks;
+    }
+
+    public function sortTasksByPriority(array $tasks): array {
+        usort($tasks, function($a, $b) {
+            $priorityOrder = ['high' => 1, 'medium' => 2, 'low' => 3];
+            
+            $priorityA = $a->getPriority()->value; 
+            $priorityB = $b->getPriority()->value;
+    
+            if ($priorityOrder[$priorityA] === $priorityOrder[$priorityB]) {
+                return 0;
+            }
+    
+            return ($priorityOrder[$priorityA] < $priorityOrder[$priorityB]) ? -1 : 1;
+        });
+    
+        return $tasks;
+    }
+    
 }

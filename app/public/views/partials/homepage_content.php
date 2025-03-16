@@ -83,7 +83,7 @@
 
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Full name:</label>
-                    <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your username" required>
+                    <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your full name" required>
                 </div>
 
                 <div class="mb-3">
@@ -100,13 +100,10 @@
                     <button id="signUpButton" type="submit" class="btn btn-primary">Sign up</button>
                     <div>
                         <label class="me-2">Already have an account?</label>
-                        <a href="/login-page" type="button" class="btn btn-outline-secondary">Login</a>
+                        <a href="/login-page" type="button" class="btn btn-outline-primary">Login</a>
                     </div>
                 </div>
             </form>
         </div>
     </header>
 </section>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../assets/js/main.js"></script>

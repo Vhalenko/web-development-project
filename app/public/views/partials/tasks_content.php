@@ -3,6 +3,30 @@
         <div class="row">
             <div class="col-md-8">
                 <h2>Manage Your Tasks</h2>
+
+                <!-- Sorting and Filtering Controls -->
+                <div class="mb-4">
+                    <!-- Sort by Dropdown -->
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                            Sort by
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="?sort=priority&filter=<?= $_GET['filter'] ?? 'all' ?>">Priority</a></li>
+                            <li><a class="dropdown-item" href="?sort=deadline&filter=<?= $_GET['filter'] ?? 'all' ?>">Deadline</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Filter by Status Buttons -->
+                    <div class="btn-group">
+                        <a class="btn btn-outline-success" href="?filter=completed&sort=<?= $_GET['sort'] ?? 'deadline' ?>">Show Completed</a>
+                        <a class="btn btn-outline-warning" href="?filter=incompleted&sort=<?= $_GET['sort'] ?? 'deadline' ?>">Show Incomplete</a>
+                        <a class="btn btn-outline-secondary" href="?filter=all&sort=<?= $_GET['sort'] ?? 'deadline' ?>">Show All</a>
+                    </div>
+                </div>
+
+
+                <!-- Tasks List -->
                 <ul class="list-group mb-4">
                     <?php foreach ($tasks as $task) { ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -14,13 +38,12 @@
                                 </p>
                             </div>
                             <div>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-warning edit-btn" 
-                                   data-task-id="<?= $task->getTaskId() ?>" 
-                                   data-task-title="<?= htmlspecialchars($task->getTitle()) ?>"
-                                   data-task-priority="<?= htmlspecialchars($task->getPriority()->value) ?>"
-                                   data-task-deadline="<?= htmlspecialchars($task->getDeadline()->format('Y-m-d')) ?>"
-                                   data-task-description="<?= htmlspecialchars($task->getDescription()) ?>"
-                                >Edit</a>
+                                <a href="javascript:void(0);" class="btn btn-sm btn-warning edit-btn"
+                                    data-task-id="<?= $task->getTaskId() ?>"
+                                    data-task-title="<?= htmlspecialchars($task->getTitle()) ?>"
+                                    data-task-priority="<?= htmlspecialchars($task->getPriority()->value) ?>"
+                                    data-task-deadline="<?= htmlspecialchars($task->getDeadline()->format('Y-m-d')) ?>"
+                                    data-task-description="<?= htmlspecialchars($task->getDescription()) ?>">Edit</a>
                                 <a href="/complete-task/<?= $task->getTaskId() ?>" class="btn btn-sm btn-success">Complete</a>
                                 <a href="/remove-task/<?= $task->getTaskId() ?>" class="btn btn-sm btn-danger">Delete</a>
                             </div>
@@ -85,6 +108,8 @@
         </div>
     </div>
 </section>
+<!-- Bootstrap JS (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Link to the external JavaScript file -->
 <script src="../../assets/js/main.js"></script>

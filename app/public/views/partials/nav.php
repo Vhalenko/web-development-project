@@ -25,7 +25,7 @@ $user = $userController->getUserById($_SESSION['user']['id']);
                 </li>
                 <li class="nav-item d-flex align-items-center ms-3">
                     <img class="coin-icon" src="../../assets/img/coin.png" alt="Coins">
-                    <span class="ms-2 text-light"><?= $user->getTotalPoints()?></span> <!-- Example coin count -->
+                    <span class="ms-2 text-light total-points"><?= $user->getTotalPoints()?></span> <!-- Example coin count -->
                 </li>
             </ul>
         </div>

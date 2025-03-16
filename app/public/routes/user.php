@@ -31,8 +31,8 @@ Route::add('/profile', function () {
     $taskController = new TaskController();
 
     $user = $userController->getUserById($_SESSION['user']['id']);
-    $completedTasks = $taskController->getCompletedTasksForUser($user->getUserId());
-    $uncumpletedTasks = $taskController->getUncompletedTasksForUser($user->getUserId());
+    $completedTasks = $taskController->getCompletedTasks($user->getUserId());
+    $uncumpletedTasks = $taskController->getUncompletedTasks($user->getUserId());
 
     require(__DIR__ . "/../views/pages/profile.php");
 });

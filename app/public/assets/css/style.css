@@ -93,3 +93,10 @@ table {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.332); 
     backdrop-filter: blur(10px);
 }
+
+.total-points {
+    font-family: "Pixelify Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }

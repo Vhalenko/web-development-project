@@ -70,6 +70,14 @@
             <h1 class="display-4 fw-bold">Gamify Your Life</h1>
             <p class="lead">Build habits, complete tasks, and achieve your goals while having fun.</p>
 
+            <?php $error = $_SESSION['error'] ?? []; ?>
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-danger">
+                    <?= htmlspecialchars($error) ?>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
             <form action="/signup" class="sign-up-form" id="signUpForm" method="POST">
                 <h2 class="display-8 fw-bold text-center mb-4">Sign up</h2>
 

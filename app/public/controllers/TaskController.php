@@ -21,12 +21,13 @@ class TaskController
             $description = $_POST['description'];
             $priority = $_POST['priority'];
             $deadline = DateTime::createFromFormat('Y-m-d', $_POST['deadline']);
-            $creationDate = new DateTime('now');
+            $creationDate = new DateTime('today');
             $completionDate = null;
             $isCompleted = false;
 
             if($creationDate > $deadline) {
-                echo "Wrong deadline";
+                $_SESSION['error'] = 'the deadline cannot be before creation date';
+                header("Location: /tasks");
                 exit;
             }
 
@@ -50,6 +51,12 @@ class TaskController
         $description = $_POST['description'];
         $priority = $_POST['priority'];
         $deadline = DateTime::createFromFormat('Y-m-d', $_POST['deadline']);
+
+        if(new DateTime('today') > $deadline) {
+            $_SESSION['error'] = 'the deadline cannot be before creation date';
+            header("Location: /tasks");
+            exit;
+        }
         
         $this->taskModel->editTask($taskId, $title, $description, $priority, $deadline);
         header("Location: /tasks");

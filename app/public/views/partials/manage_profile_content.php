@@ -1,14 +1,3 @@
-<?php 
-    $storeItemController = new StoreItemController();
-    $availablePictures = ['default-profile.jpg'];
-    foreach($purchases as $purchase) {
-        $item = $storeItemController->getStoreItemById($purchase->getItemId());
-        $availablePictures[] = $item->getAssetPath();
-    }
-    
-    $profilePicture = $user->getSelectedAvatar() ?: 'default-profile.jpg';
-?>
-
 <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
     <div class="row justify-content-center w-100">
         <div class="col-md-6">

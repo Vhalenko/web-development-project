@@ -2,6 +2,23 @@
 <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
     <div class="row w-100">
         <h2 class="w-100 text-center mb-5">Store Items</h2>
+
+        <?php $error = $_SESSION['error'] ?? []; ?>
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger">
+                <?= htmlspecialchars($error) ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <?php $congrat = $_SESSION['congrat'] ?? []; ?>
+        <?php if (!empty($congrat)): ?>
+            <div class="alert alert-success">
+                <?= htmlspecialchars($congrat) ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
         <?php foreach ($storeItems as $item): ?>
             <div class="col-md-4 mb-4">
                 <div class="card store-item-card">

@@ -7,7 +7,7 @@ class UserModel extends BaseModel
 {
     public function getUsersByPoints(): array
     {
-        $query = "SELECT * FROM user ORDER BY streak_count DESC LIMIT 50";
+        $query = "SELECT * FROM user ORDER BY total_tasks_completed DESC LIMIT 50";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
 
@@ -74,7 +74,7 @@ class UserModel extends BaseModel
 
         if ($user && password_verify($password, $user['password_hash'])) {
             try {
-                $lastCompletedTask = new DateTime($user['last_completed_task']);
+                $lastCompletedTask = isset($user['last_completed_task']) && !empty($user['last_completed_task']) ? new DateTime($user['last_completed_task']) : null;
                 return new UserDto(
                     $user['user_id'],              
                     $user['username'],   
@@ -171,7 +171,7 @@ class UserModel extends BaseModel
             $user = $stmt->fetch();
 
             if ($user) {
-                $lastCompletedTask = new DateTime($user['last_completed_task']);
+                $lastCompletedTask = isset($user['last_completed_task']) && !empty($user['last_completed_task']) ? new DateTime($user['last_completed_task']) : null;
                 return new UserDto(
                     $user['user_id'],              
                     $user['username'],   

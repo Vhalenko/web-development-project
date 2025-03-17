@@ -46,6 +46,15 @@ Route::add('/manage-profile', function () {
     $user = $userController->getUserById($_SESSION['user']['id']);
     $purchases = $purchaseController->getPurchasesForUser($user->getUserId());
 
+    $storeItemController = new StoreItemController();
+    $availablePictures = ['default-profile.jpg'];
+    foreach($purchases as $purchase) {
+        $item = $storeItemController->getStoreItemById($purchase->getItemId());
+        $availablePictures[] = $item->getAssetPath();
+    }
+    
+    $profilePicture = $user->getSelectedAvatar() ?: 'default-profile.jpg';
+
     require(__DIR__ . "/../views/pages/manage_profile.php");
 });
 

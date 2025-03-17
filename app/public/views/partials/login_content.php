@@ -3,6 +3,15 @@
         <h1 class="display-4 fw-bold text-primary">Welcome Back to Your Productivity Hub</h1>
         <p class="lead text-light">We're excited to see you continue your journey of completing tasks, unlocking achievements, and leveling up your productivity.</p>
     </div>
+
+    <?php $error = $_SESSION['error'] ?? []; ?>
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-danger">
+            <?= htmlspecialchars($error) ?>
+        </div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
+
     <form action="/login" class="login-form" id="loginForm" method="POST">
         <h2 class="display-8 fw-bold text-center">Login</h2>
         <div class="mb-3">
@@ -22,4 +31,3 @@
         </div>
     </form>
 </div>
-

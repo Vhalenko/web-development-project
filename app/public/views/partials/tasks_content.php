@@ -54,6 +54,15 @@
 
             <div class="col-md-4">
                 <h2 for="addTaskForm">Add New Task</h2>
+
+                <?php $error = $_SESSION['error'] ?? []; ?>
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger">
+                            <?= htmlspecialchars($error) ?>
+                    </div>
+                    <?php unset($_SESSION['error']); ?>
+                <?php endif; ?>
+                
                 <form id="addTaskForm" action="/add-task" method="POST">
                     <div class="mb-3">
                         <label for="taskTitle" class="form-label">Task Title</label>
@@ -108,8 +117,5 @@
         </div>
     </div>
 </section>
-<!-- Bootstrap JS (CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Link to the external JavaScript file -->
-<script src="../../assets/js/main.js"></script>
+<script src="../../assets/js/task.js"></script>

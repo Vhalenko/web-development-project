@@ -33,7 +33,9 @@ class UserController
                 ];
                 header("Location: /profile");
             } else {
-                echo "<script>alert('login failed');</script>";
+                $_SESSION['error'] = 'wrong username or password';
+                header("Location: /login-page");
+                exit;
             }
         }
     }
@@ -55,15 +57,16 @@ class UserController
             $password = $_POST['password'];
 
             if ($this->userModel->emailExists($email)) {
-                echo "Username or email already in use.";
+                $_SESSION['error'] = 'this email is already in use';
+                header("Location: /#signUpForm");
                 exit;
             }
 
-            try {
-                $this->userModel->addUser($username, $fullName, $email, $password, 0, 0, 0, null);
+            if ($this->userModel->addUser($username, $fullName, $email, $password, 0, 0, 0, null)) {
                 header("Location: /login-page");
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+            }
+            else {
+                echo "Error creating a user";
                 exit;
             }
         }
@@ -122,13 +125,14 @@ class UserController
         }
     }
 
-    public function rewardUser() {
+    public function rewardUser()
+    {
         $user = $this->getUserById($_SESSION['user']['id']);
         $streak = $user->getStreakCount();
         $points = $user->getTotalPoints();
         $totalTasksCompleted = $user->getTotalTasksCompleted();
-        $lastCompletedTask = $user->getLastCompletedTask();
-        
+        $lastCompletedTask = $user->getLastCompletedTask() ?? new DateTime('-1 day');
+
         $points = $points + 10;
         $totalTasksCompleted += 1;
         if ($lastCompletedTask->format('Y-m-d') != (new DateTime('today'))->format('Y-m-d')) {
@@ -145,7 +149,8 @@ class UserController
         $this->updateSession($user->getUserId());
     }
 
-    public function getUserById(int $id) :UserDto {
+    public function getUserById(int $id): UserDto
+    {
         return $this->userModel->getUserById($id);
     }
 }

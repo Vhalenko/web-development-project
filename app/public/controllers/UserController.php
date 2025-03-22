@@ -133,11 +133,11 @@ class UserController
         $totalTasksCompleted = $user->getTotalTasksCompleted();
         $lastCompletedTask = $user->getLastCompletedTask() ?? new DateTime('-1 day');
 
-        $points = $points + 10;
         $totalTasksCompleted += 1;
         if ($lastCompletedTask->format('Y-m-d') != (new DateTime('today'))->format('Y-m-d')) {
             if ($lastCompletedTask->format('Y-m-d') === (new DateTime('today'))->modify('-1 day')->format('Y-m-d')) {
                 $streak = $streak + 1;
+                $points = $points + 50;
             } else {
                 $streak = 0;
             }

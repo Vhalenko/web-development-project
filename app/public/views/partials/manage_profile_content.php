@@ -1,15 +1,12 @@
 <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
     <div class="row justify-content-center w-100">
         <div class="col-md-6">
-            <!-- Card for better UI -->
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white text-center">
                     <h4>Manage Account</h4>
                 </div>
                 <div class="card-body p-4">
                     <form id="edit-form" action="/update-account" method="POST">
-
-                        <!-- Profile Picture Selection -->
                         <div class="mb-3 text-center">
                             <img id="profilePreview" 
                                  src="../../assets/img/profiles/<?php echo htmlspecialchars($profilePicture); ?>" 
@@ -62,10 +59,5 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('profilePicture').addEventListener('change', function() {
-        const selectedPicture = this.value;
-        document.getElementById('profilePreview').src = `../../assets/img/profiles/${selectedPicture}`;
-    });
-</script>
+<script src="../../assets/js/user.js"></script>
 

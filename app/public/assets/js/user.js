@@ -26,3 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
         options: { responsive: true }
     });
 });
+
+document.getElementById('profilePicture').addEventListener('change', function() {
+    const selectedPicture = this.value;
+    document.getElementById('profilePreview').src = `../../assets/img/profiles/${selectedPicture}`;
+});

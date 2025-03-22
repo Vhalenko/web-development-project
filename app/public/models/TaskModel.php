@@ -33,7 +33,7 @@ class TaskModel extends BaseModel {
         }
     }
 
-    public function completeTask(int $taskId) {
+    public function completeTask(int $taskId): ?bool {
         $query = "UPDATE task SET completion_date = :completion_date, is_completed = :is_completed WHERE task_id = :task_id";
         $stmt = $this->pdo->prepare($query);
 
@@ -46,24 +46,28 @@ class TaskModel extends BaseModel {
 
         try {
             $stmt->execute();
+            return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
-    public function removeTask(int $taskId) {
+    public function removeTask(int $taskId): ?bool {
         $query = "DELETE FROM task WHERE task_id = :task_id";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':task_id', $taskId);
         
         try {
             $stmt->execute();
+            return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
+        return false;
     }
 
-    public function editTask(int $taskId, string $title, ?string $description, string $priority, DateTime $deadline) {
+    public function editTask(int $taskId, string $title, ?string $description, string $priority, DateTime $deadline): bool {
         $query = "UPDATE task SET title = :title, priority = :priority, deadline = :deadline, ";
     
         $params = [
@@ -88,9 +92,11 @@ class TaskModel extends BaseModel {
     
         try {
             $stmt->execute();
+            return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
+        return false;
     }
     
 
@@ -126,39 +132,6 @@ class TaskModel extends BaseModel {
 
         return $taskDtos; 
     }
-
-    // public function getCompletedTasksForUser(int $userId) {
-    //     $stmt = $this->pdo->prepare("SELECT * FROM task WHERE user_id = :user_id AND is_completed = 1");
-    //     $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-    //     $stmt->execute();
-
-    //     $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     $taskDtos = [];
-
-    //     foreach($tasks as $task) {
-    //         $priority = Priority::from($task['priority']);
-    //         $deadline = new DateTime($task['deadline']);
-    //         $creationDate = new DateTime($task['creation_date']);
-    //         $completionDate = $task['completion_date'] ? new DateTime($task['completion_date']) : null;
-    //         $isCompleted = $this->tinyintToBool($task['is_completed']);
-
-    //         $taskDTO = new TaskDto(
-    //             $task['task_id'],
-    //             $task['user_id'],
-    //             $task['title'],
-    //             $task['description'],
-    //             $priority,
-    //             $deadline,
-    //             $creationDate,
-    //             $completionDate,
-    //             $isCompleted,
-    //         );
-
-    //         $taskDtos[] = $taskDTO;
-    //     }
-
-    //     return $taskDtos; 
-    // }
 
     public function getTask(int $id) {
         $stmt = $this->pdo->prepare("SELECT * FROM task WHERE task_id = :task_id");

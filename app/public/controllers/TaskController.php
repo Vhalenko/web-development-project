@@ -13,53 +13,63 @@ class TaskController
         $this->taskModel = new TaskModel();
     }
 
-    public function addTask()
+    public function addTask(): ?bool
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $userId = $_SESSION['user']['id'];
-            $title = $_POST['title'];
-            $description = $_POST['description'];
-            $priority = $_POST['priority'];
-            $deadline = DateTime::createFromFormat('Y-m-d', $_POST['deadline']);
-            $creationDate = new DateTime('today');
-            $completionDate = null;
-            $isCompleted = false;
+        $data = json_decode(file_get_contents('php://input'), true);
 
-            if($creationDate > $deadline) {
-                $_SESSION['error'] = 'the deadline cannot be before creation date';
-                header("Location: /tasks");
-                exit;
-            }
+        $userId = $_SESSION['user']['id'];
 
-            if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
-                header("Location: /tasks");
-            } else {
-                echo "Error creting a task";
-            }
+        $title = $data['title'];
+        $description = isset($data['description']) ? $data['description'] : '';
+        $priority = $data['priority'];
+        $deadline = DateTime::createFromFormat('Y-m-d', $data['deadline']);
+        $creationDate = new DateTime('today');
+        $completionDate = null;
+        $isCompleted = false;
+
+        if ($deadline < $creationDate) {
+            $_SESSION['error'] = 'the deadline cannot be before creation date';
+            header("Location: /tasks");
+            return false;
         }
+
+        if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
+            return true;
+        } else {
+            echo json_encode(["error" => "Error creating the task"]);
+        }
+
+        return false;
     }
 
-    public function removeTask(int $taskId)
+
+    public function removeTask(int $taskId): bool
     {
-        $this->taskModel->removeTask($taskId);
-        header("Location: /tasks");
+        return $this->taskModel->removeTask($taskId);
     }
 
     public function editTask(int $taskId)
     {
-        $title = $_POST['title'];
-        $description = $_POST['description'];
-        $priority = $_POST['priority'];
-        $deadline = DateTime::createFromFormat('Y-m-d', $_POST['deadline']);
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        if(new DateTime('today') > $deadline) {
+        $title = $data['title'];
+        $description = $data['description'];
+        $priority = $data['priority'];
+        $deadline = DateTime::createFromFormat('Y-m-d', $data['deadline']);
+
+        if (new DateTime('today') > $deadline) {
             $_SESSION['error'] = 'the deadline cannot be before creation date';
             header("Location: /tasks");
             exit;
         }
-        
-        $this->taskModel->editTask($taskId, $title, $description, $priority, $deadline);
-        header("Location: /tasks");
+
+        if ($this->taskModel->editTask($taskId, $title, $description, $priority, $deadline)) {
+            return true;
+        }
+        else {
+            echo json_encode(["error" => "Error creating the task"]);
+        }
+        return false;
     }
 
     public function getTask(int $id)
@@ -67,13 +77,13 @@ class TaskController
         return $this->taskModel->getTask($id);
     }
 
-    public function completeTask(int $id)
+    public function completeTask(int $id): ?bool
     {
-        $this->taskModel->completeTask($id);
-        header("Location: /tasks");
+        return $this->taskModel->completeTask($id);
     }
 
-    public function getAllTasks() {
+    public function getAllTasks()
+    {
         $userId = $_SESSION['user']['id'];
         return $this->taskModel->getTasksForUser($userId);
     }
@@ -82,7 +92,7 @@ class TaskController
     {
         $tasks = $this->getAllTasks();
 
-        $uncompletedTasks = array_filter($tasks, function($task) {
+        $uncompletedTasks = array_filter($tasks, function ($task) {
             return !$task->getIsCompleted();
         });
 
@@ -93,15 +103,16 @@ class TaskController
     {
         $tasks = $this->getAllTasks();
 
-        $completedTasks = array_filter($tasks, function($task) {
+        $completedTasks = array_filter($tasks, function ($task) {
             return $task->getIsCompleted();
         });
 
         return $completedTasks;
     }
 
-    public function sortTasksByDeadline(array $tasks): array {
-        usort($tasks, function($a, $b) {
+    public function sortTasksByDeadline(array $tasks): array
+    {
+        usort($tasks, function ($a, $b) {
             if ($a->getDeadline() == $b->getDeadline()) {
                 return 0;
             }
@@ -111,21 +122,21 @@ class TaskController
         return $tasks;
     }
 
-    public function sortTasksByPriority(array $tasks): array {
-        usort($tasks, function($a, $b) {
+    public function sortTasksByPriority(array $tasks): array
+    {
+        usort($tasks, function ($a, $b) {
             $priorityOrder = ['high' => 1, 'medium' => 2, 'low' => 3];
-            
-            $priorityA = $a->getPriority()->value; 
+
+            $priorityA = $a->getPriority()->value;
             $priorityB = $b->getPriority()->value;
-    
+
             if ($priorityOrder[$priorityA] === $priorityOrder[$priorityB]) {
                 return 0;
             }
-    
+
             return ($priorityOrder[$priorityA] < $priorityOrder[$priorityB]) ? -1 : 1;
         });
-    
+
         return $tasks;
     }
-    
 }

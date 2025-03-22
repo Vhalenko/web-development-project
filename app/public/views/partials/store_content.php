@@ -16,7 +16,7 @@
             <div class="alert alert-success">
                 <?= htmlspecialchars($congrat) ?>
             </div>
-            <?php unset($_SESSION['error']); ?>
+            <?php unset($_SESSION['congrat']); ?>
         <?php endif; ?>
 
         <?php foreach ($storeItems as $item): ?>

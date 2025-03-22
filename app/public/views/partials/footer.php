@@ -1,13 +1,11 @@
 <footer class="bg-dark text-white py-4">
     <div class="container">
         <div class="row">
-            <!-- Column 1: Branding or Logo -->
             <div class="col-md-4 mb-3">
                 <h4>TaskQuest</h4>
                 <p>Your task management solution.</p>
             </div>
 
-            <!-- Column 2: Links -->
             <div class="col-md-4 mb-3">
                 <h5>Quick Links</h5>
                 <ul class="list-unstyled">
@@ -18,7 +16,6 @@
                 </ul>
             </div>
 
-            <!-- Column 3: Social Media -->
             <div class="col-md-4 mb-3">
                 <h5>Follow Us</h5>
                 <div>
@@ -30,7 +27,6 @@
             </div>
         </div>
 
-        <!-- Bottom Text: Copyright -->
         <div class="text-center mt-4">
             <p>&copy; 2024 TaskQuest. All Rights Reserved.</p>
         </div>

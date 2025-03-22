@@ -1,6 +1,6 @@
 <?php
 
-class TaskDto {
+class TaskDto implements JsonSerializable {
     private int $taskId;
     private int $userId;
     private string $title;
@@ -21,6 +21,20 @@ class TaskDto {
         $this->creationDate = $creationDate;
         $this->completionDate = $completionDate;
         $this->isCompleted = $isCompleted;
+    }
+
+    public function jsonSerialize(): mixed {
+        return [
+            'taskId' => $this->taskId,
+            'userId' => $this->userId,
+            'title' => $this->title,
+            'description' => $this->description,
+            'priority' => $this->priority,
+            'deadline' => $this->deadline,
+            'creationDate' => $this->creationDate,
+            'completionDate' => $this->completionDate,
+            'completed' => $this->isCompleted
+        ];
     }
 
     // Getters and Setters

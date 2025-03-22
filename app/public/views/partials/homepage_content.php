@@ -32,7 +32,6 @@
 
     <div class="container">
         <div class="row text-center">
-            <!-- Task Management Feature -->
             <div class="col-md-4 mb-4">
                 <div class="card shadow-lg border-0 p-4 h-100">
                     <i class="bi bi-check-circle fs-1 text-primary mb-3"></i>
@@ -42,7 +41,6 @@
                 </div>
             </div>
 
-            <!-- Gamification Feature -->
             <div class="col-md-4 mb-4">
                 <div class="card shadow-lg border-0 p-4 h-100">
                     <i class="bi bi-award fs-1 text-success mb-3"></i>
@@ -52,7 +50,6 @@
                 </div>
             </div>
 
-            <!-- Collaboration Feature -->
             <div class="col-md-4 mb-4">
                 <div class="card shadow-lg border-0 p-4 h-100">
                     <i class="bi bi-people fs-1 text-danger mb-3"></i>

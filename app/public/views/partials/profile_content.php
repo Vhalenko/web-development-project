@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6 text-center">
                 <?php
-                $profilePicture = $user->getSelectedAvatar() ?: "default-profile.jpg"; // Use default if null or empty
+                $profilePicture = $user->getSelectedAvatar() ?: "default-profile.jpg";
                 ?>
                 <img src="../../assets/img/profiles/<?php echo htmlspecialchars($profilePicture); ?>"
                     class="rounded-circle mb-3"
@@ -39,5 +39,4 @@
     </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="../../assets/js/user.js"></script>

@@ -6,7 +6,6 @@ $user = $userController->getUserById($_SESSION['user']['id']);
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
     <div class="container d-flex align-items-center">
-        <!-- Logo with a fixed height to maintain aspect ratio -->
         <img src="../../assets/img/logo.webp" alt="" class="logo">
         <a class="navbar-brand ms-2" href="#">TaskQuest</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +27,7 @@ $user = $userController->getUserById($_SESSION['user']['id']);
                 </li>
                 <li class="nav-item d-flex align-items-center ms-3">
                     <img class="coin-icon" src="../../assets/img/coin.png" alt="Coins">
-                    <span class="ms-2 text-light total-points"><?= $user->getTotalPoints() ?></span> <!-- Example coin count -->
+                    <span class="ms-2 text-light total-points"><?= $user->getTotalPoints() ?></span>
                 </li>
             </ul>
         </div>

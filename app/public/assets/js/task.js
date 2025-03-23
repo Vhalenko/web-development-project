@@ -15,6 +15,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             deadline: deadline,
             description: taskDescription
         };
+
+        const today = new Date().toISOString().split("T")[0];
+
+        if (deadline < today) {
+            alert("Deadline cannot be before today.");
+            return;
+        }
     
         const response = await fetch("/api/task", {
             method: "POST",
@@ -48,6 +55,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             deadline: deadline,
             description: taskDescription
         };
+
+        const today = new Date().toISOString().split("T")[0];
+
+        if (deadline < today) {
+            alert("Deadline cannot be before today.");
+            return;
+        }
     
         const response = await fetch(`/api/task/edit/${taskId}`, {
             method: "POST",
@@ -62,13 +76,32 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (response.ok) {
             alert("Task updated successfully!");
             loadTasks();
+            toggleForms(false);
             document.getElementById("editTaskForm").reset();
         } else {
             alert(responseData.error || "An error occurred while updating the task");
         }
     });
-    
 
+    document.querySelectorAll(".filter-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            const filter = this.getAttribute("data-filter");
+            const sort = document.querySelector(".sort-btn.active")?.getAttribute("data-sort") || "deadline";
+            loadTasks(filter, sort);
+        });
+    });
+    
+    document.querySelectorAll(".sort-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            document.querySelectorAll(".sort-btn").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+    
+            const sort = this.getAttribute("data-sort");
+            const filter = document.querySelector(".filter-btn.active")?.getAttribute("data-filter") || "all";
+            loadTasks(filter, sort);
+        });
+    });  
+    
     document.body.addEventListener("click", function (event) {
         const target = event.target;
 
@@ -86,9 +119,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 });
 
-async function loadTasks() {
+async function loadTasks(filter = "incompleted", sort = "deadline") {
     try {
-        const response = await fetch(`/api/tasks`);
+        const response = await fetch(`/api/tasks?filter=${filter}&sort=${sort}`);
         if (!response.ok) throw new Error("Failed to fetch tasks");
 
         const data = await response.json();
@@ -110,11 +143,7 @@ async function loadTasks() {
                 </div>
                 <div>
                     <a href="javascript:void(0);" class="btn btn-sm btn-warning edit-btn"
-                        data-task-id="${task.taskId}"
-                        data-task-title="${escapeHtml(task.title)}"
-                        data-task-priority="${escapeHtml(task.priority)}"
-                        data-task-deadline="${formattedDeadline}"
-                        data-task-description="${escapeHtml(task.description)}">Edit</a>
+                        data-task-id="${task.taskId}">Edit</a>
                     <a href="javascript:void(0);" class="btn btn-sm btn-success complete-btn" data-task-id="${task.taskId}">Complete</a>
                     <a href="javascript:void(0);" class="btn btn-sm btn-danger delete-btn" data-task-id="${task.taskId}">Delete</a>
                 </div>
@@ -125,6 +154,7 @@ async function loadTasks() {
         console.error("Error loading tasks:", error);
     }
 }
+
 
 function handleEditClick(button) {
     document.getElementById("editTaskId").value = button.dataset.taskId;

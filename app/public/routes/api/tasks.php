@@ -8,25 +8,22 @@ Route::add('/api/tasks', function () {
 
     $taskController = new TaskController();
 
-    // $sort = $_GET['sort'] ?? 'deadline';
-    // $filter = $_GET['filter'] ?? 'incompleted';
+    $sort = $_GET['sort'] ?? 'deadline';
+    $filter = $_GET['filter'] ?? 'incompleted';
 
-    // if ($filter == 'completed') {
-    //     $tasks = $taskController->getCompletedTasks();
-    // } elseif ($filter == 'incompleted') {
-    //     $tasks = $taskController->getUncompletedTasks();
-    // } else {
-    //     $tasks = $taskController->getAllTasks();
-    // }
+    if ($filter == 'completed') {
+        $tasks = $taskController->getCompletedTasks();
+    } elseif ($filter == 'incompleted') {
+        $tasks = $taskController->getUncompletedTasks();
+    } else {
+        $tasks = $taskController->getAllTasks();
+    }
 
-    // if ($sort == 'priority') {
-    //     $tasks = $taskController->sortTasksByPriority($tasks);
-    // } else {
-    //     $tasks = $taskController->sortTasksByDeadline($tasks);
-    // }
-
-    $tasks = $taskController->getUncompletedTasks();
-
+    if ($sort == 'priority') {
+        $tasks = $taskController->sortTasksByPriority($tasks);
+    } else {
+        $tasks = $taskController->sortTasksByDeadline($tasks);
+    }
     echo json_encode(["tasks" => $tasks]);
 }, ['get']);
 
@@ -37,9 +34,7 @@ Route::add('/api/task', function () {
 
     if ($taskController->addTask()) {
         echo json_encode(["message" => "Task added successfully"]);
-    } else {
-        echo json_encode(["error" => "Failed to add task"]);
-    }
+    } 
 }, ['post']);
 
 Route::add('/api/task/([0-9]*)', function ($id) {

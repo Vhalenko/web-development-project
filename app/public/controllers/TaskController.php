@@ -27,12 +27,6 @@ class TaskController
         $completionDate = null;
         $isCompleted = false;
 
-        if ($deadline < $creationDate) {
-            $_SESSION['error'] = 'the deadline cannot be before creation date';
-            header("Location: /tasks");
-            return false;
-        }
-
         if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
             return true;
         } else {
@@ -56,12 +50,6 @@ class TaskController
         $description = $data['description'];
         $priority = $data['priority'];
         $deadline = DateTime::createFromFormat('Y-m-d', $data['deadline']);
-
-        if (new DateTime('today') > $deadline) {
-            $_SESSION['error'] = 'the deadline cannot be before creation date';
-            header("Location: /tasks");
-            exit;
-        }
 
         if ($this->taskModel->editTask($taskId, $title, $description, $priority, $deadline)) {
             return true;

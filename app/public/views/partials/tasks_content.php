@@ -10,31 +10,23 @@
                             Sort by
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="?sort=priority&filter=<?= $_GET['filter'] ?? 'all' ?>">Priority</a></li>
-                            <li><a class="dropdown-item" href="?sort=deadline&filter=<?= $_GET['filter'] ?? 'all' ?>">Deadline</a></li>
+                            <li><a class="dropdown-item sort-btn" href="#" data-sort="priority">Priority</a></li>
+                            <li><a class="dropdown-item sort-btn" href="#" data-sort="deadline">Deadline</a></li>
                         </ul>
                     </div>
 
                     <div class="btn-group">
-                        <a class="btn btn-outline-success" href="?filter=completed&sort=<?= $_GET['sort'] ?? 'deadline' ?>">Show Completed</a>
-                        <a class="btn btn-outline-warning" href="?filter=incompleted&sort=<?= $_GET['sort'] ?? 'deadline' ?>">Show Incomplete</a>
-                        <a class="btn btn-outline-secondary" href="?filter=all&sort=<?= $_GET['sort'] ?? 'deadline' ?>">Show All</a>
+                        <button class="btn btn-outline-success filter-btn" data-filter="completed">Show Completed</button>
+                        <button class="btn btn-outline-warning filter-btn" data-filter="incompleted">Show Incomplete</button>
+                        <button class="btn btn-outline-secondary filter-btn" data-filter="all">Show All</button>
                     </div>
-                </div>  
-                <ul class="list-group mb-4"></ul>              
+                </div>
+
+                <ul class="list-group mb-4"></ul>
             </div>
 
             <div class="col-md-4">
                 <h2 for="addTaskForm">Add New Task</h2>
-
-                <?php $error = $_SESSION['error'] ?? []; ?>
-                <?php if (!empty($error)): ?>
-                    <div class="alert alert-danger">
-                            <?= htmlspecialchars($error) ?>
-                    </div>
-                    <?php unset($_SESSION['error']); ?>
-                <?php endif; ?>
-                
                 <form id="addTaskForm" method="POST">
                     <div class="mb-3">
                         <label for="taskTitle" class="form-label">Task Title</label>

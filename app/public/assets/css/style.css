@@ -109,3 +109,9 @@ table {
     background: transparent;
     margin: 10px;
 }
+
+.chart-canvas {
+    max-width: 300px;
+    max-height: 300px;
+    padding: 10px;
+}

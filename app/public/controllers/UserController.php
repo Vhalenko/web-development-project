@@ -139,7 +139,7 @@ class UserController
                 $streak = $streak + 1;
                 $points = $points + 50;
             } else {
-                $streak = 0;
+                $streak = 1;
             }
         }
         $lastCompletedTask = new DateTime('now');

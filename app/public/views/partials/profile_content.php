@@ -23,19 +23,20 @@
         <div class="container">
             <h2 class="text-center">Your Stats</h2>
             <div class="row">
-                <div class="col-md-6">
-                    <canvas id="tasksChart"
+                <div class="col-md-6 d-flex justify-content-center">
+                    <canvas id="tasksChart" class="chart-canvas"
                         data-tasks-completed="<?php echo count($completedTasks); ?>"
                         data-tasks-uncompleted="<?php echo count($uncumpletedTasks); ?>">
                     </canvas>
                 </div>
-                <div class="col-md-6">
-                    <canvas id="streakChart"
+                <div class="col-md-6 d-flex justify-content-center">
+                    <canvas id="streakChart" class="chart-canvas"
                         data-streak-count="<?php echo $user->getStreakCount(); ?>">
                     </canvas>
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 

@@ -16,9 +16,9 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-outline-success filter-btn" data-filter="completed">Show Completed</button>
-                        <button class="btn btn-outline-warning filter-btn" data-filter="incompleted">Show Incomplete</button>
-                        <button class="btn btn-outline-secondary filter-btn" data-filter="all">Show All</button>
+                        <button class="btn btn-outline-success filter-btn" data-filter="completed">Completed</button>
+                        <button class="btn btn-outline-warning active filter-btn" data-filter="incompleted">Incomplete</button>
+                        <button class="btn btn-outline-secondary filter-btn" data-filter="all">All</button>
                     </div>
                 </div>
 
@@ -26,6 +26,10 @@
             </div>
 
             <div class="col-md-4">
+                <div id="alert-box" class="alert alert-danger d-none">
+                    <p id="alert-message"></p>
+                </div>
+
                 <h2 for="addTaskForm">Add New Task</h2>
                 <form id="addTaskForm" method="POST">
                     <div class="mb-3">

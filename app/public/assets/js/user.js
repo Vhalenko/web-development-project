@@ -14,17 +14,39 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    const xValues = [];
+    const yValues = [];
+    generateData("x", 0, streakCount, 0.5);
+
     new Chart(document.getElementById("streakChart"), {
-        type: "bar",
+        type: "line",
         data: {
-            labels: ["Current Streak"],
+            labels: xValues,
             datasets: [{
-                data: [streakCount],
-                backgroundColor: ["#007bff"]
+                fill: false,
+                pointRadius: 1,
+                borderColor: "rgba(255,0,0,0.5)",
+                data: yValues
             }]
         },
-        options: { responsive: true }
+        options: {
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Your Streak Progress"
+                }
+            }
+        }
     });
+    
+
+    function generateData(value, i1, i2, step = 1) {
+        for (let x = i1; x <= i2; x += step) {
+            yValues.push(eval(value));
+            xValues.push(x);
+        }
+    }
 });
 
 document.getElementById('profilePicture').addEventListener('change', function() {

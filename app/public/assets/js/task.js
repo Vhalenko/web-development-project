@@ -16,10 +16,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             description: taskDescription
         };
 
+        if(taskTitle == "") {
+            displayError("Please add a task title");
+            return;
+        }
+
         const today = new Date().toISOString().split("T")[0];
 
         if (deadline < today) {
-            alert("Deadline cannot be before today.");
+            displayError("Deadline cannot be before today.");
             return;
         }
     
@@ -34,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const responseData = await response.json();
     
         if (response.ok) {
+            hideError();
             loadTasks();
         } else {
             alert(responseData.error || "An error occurred while adding the task");
@@ -56,12 +62,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             description: taskDescription
         };
 
-        const today = new Date().toISOString().split("T")[0];
-
-        if (deadline < today) {
-            alert("Deadline cannot be before today.");
+        if(taskTitle == "") {
+            displayError("Please add a task title");
             return;
         }
+
+        const today = new Date().toISOString().split("T")[0];
     
         const response = await fetch(`/api/task/edit/${taskId}`, {
             method: "POST",
@@ -74,9 +80,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         const responseData = await response.json();  
     
         if (response.ok) {
-            alert("Task updated successfully!");
-            loadTasks();
             toggleForms(false);
+            hideError();
+            loadTasks();
             document.getElementById("editTaskForm").reset();
         } else {
             alert(responseData.error || "An error occurred while updating the task");
@@ -85,6 +91,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.querySelectorAll(".filter-btn").forEach(button => {
         button.addEventListener("click", function() {
+            document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
             const filter = this.getAttribute("data-filter");
             const sort = document.querySelector(".sort-btn.active")?.getAttribute("data-sort") || "deadline";
             loadTasks(filter, sort);
@@ -142,8 +151,15 @@ async function loadTasks(filter = "incompleted", sort = "deadline") {
                     </p>
                 </div>
                 <div>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-warning edit-btn"
-                        data-task-id="${task.taskId}">Edit</a>
+                    <a href="javascript:void(0);" 
+                       class="btn btn-sm btn-warning edit-btn"
+                       data-task-id="${task.taskId}"
+                       data-task-title="${escapeHtml(task.title)}"
+                       data-task-priority="${escapeHtml(task.priority)}"
+                       data-task-deadline="${escapeHtml(formattedDeadline)}"
+                       data-task-description="${escapeHtml(task.description ?? '')}">
+                        Edit
+                    </a>
                     <a href="javascript:void(0);" class="btn btn-sm btn-success complete-btn" data-task-id="${task.taskId}">Complete</a>
                     <a href="javascript:void(0);" class="btn btn-sm btn-danger delete-btn" data-task-id="${task.taskId}">Delete</a>
                 </div>
@@ -154,7 +170,6 @@ async function loadTasks(filter = "incompleted", sort = "deadline") {
         console.error("Error loading tasks:", error);
     }
 }
-
 
 function handleEditClick(button) {
     document.getElementById("editTaskId").value = button.dataset.taskId;
@@ -193,4 +208,13 @@ function escapeHtml(str) {
     const div = document.createElement("div");
     div.textContent = str;
     return div.innerHTML;
+}
+
+function displayError(message) {
+    document.getElementById("alert-box").classList.remove('d-none');
+    document.getElementById("alert-message").textContent = message;
+}
+
+function hideError() {
+    document.getElementById("alert-box").classList.add('d-none');
 }

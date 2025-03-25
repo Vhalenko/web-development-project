@@ -20,17 +20,7 @@ class UserController
             $userDTO = $this->userModel->getUser($email, $password);
 
             if (!is_null($userDTO)) {
-                $_SESSION['user'] = [
-                    'id' => $userDTO->getUserId(),
-                    'username' => $userDTO->getUsername(),
-                    'fullName' => $userDTO->getFullName(),
-                    'email' => $userDTO->getEmail(),
-                    'streak_count' => $userDTO->getStreakCount(),
-                    'total_tasks_completed' => $userDTO->getTotalTasksCompleted(),
-                    'last_completed_task' => $userDTO->getLastCompletedTask(),
-                    'total_points' => $userDTO->getTotalPoints(),
-                    'selected_avatar' => $userDTO->getSelectedAvatar()
-                ];
+                $this->updateSession($userDTO->getUserId());
                 header("Location: /profile");
             } else {
                 $_SESSION['error'] = 'wrong username or password';
@@ -40,7 +30,7 @@ class UserController
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
         session_unset();
         session_destroy();
@@ -48,7 +38,7 @@ class UserController
         exit;
     }
 
-    public function signUp()
+    public function signUp(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = htmlspecialchars($_POST['username']);
@@ -77,7 +67,7 @@ class UserController
         return $this->userModel->getUsersByPoints();
     }
 
-    public function editUser()
+    public function editUser(): bool
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = ($_POST['username']);
@@ -105,7 +95,7 @@ class UserController
         return false;
     }
 
-    private function updateSession(int $userId)
+    private function updateSession(int $userId): void
     {
         $userDTO = $this->userModel->getUserById($userId);
         if (!is_null($userDTO)) {
@@ -125,7 +115,7 @@ class UserController
         }
     }
 
-    public function rewardUser()
+    public function rewardUser(): void
     {
         $user = $this->getUserById($_SESSION['user']['id']);
         $streak = $user->getStreakCount();
@@ -142,14 +132,14 @@ class UserController
                 $streak = 1;
             }
         }
-        $lastCompletedTask = new DateTime('now');
+        $lastCompletedTask = new DateTime('now')->format('Y-m-d');
 
         $this->userModel->rewardUser($user->getUserId(), $streak, $points, $totalTasksCompleted, $lastCompletedTask);
 
         $this->updateSession($user->getUserId());
     }
 
-    public function getUserById(int $id): UserDto
+    public function getUserById(int $id): ?UserDto
     {
         return $this->userModel->getUserById($id);
     }

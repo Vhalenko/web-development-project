@@ -13,7 +13,7 @@ class TaskController
         $this->taskModel = new TaskModel();
     }
 
-    public function addTask(): ?bool
+    public function addTask(): bool
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -22,12 +22,12 @@ class TaskController
         $title = $data['title'];
         $description = isset($data['description']) ? $data['description'] : '';
         $priority = $data['priority'];
-        $deadline = DateTime::createFromFormat('Y-m-d', $data['deadline']);
-        $creationDate = new DateTime('today');
+        $deadline = $data['deadline'];
+        $creationDate = new DateTime('today')->format('Y-m-d');
         $completionDate = null;
         $isCompleted = false;
 
-        if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $isCompleted)) {
+        if ($this->taskModel->addTask($userId, $title, $description, $priority, $deadline, $creationDate, $completionDate, $this->boolToTinyint($isCompleted))) {
             return true;
         } else {
             echo json_encode(["error" => "Error creating the task"]);
@@ -49,7 +49,7 @@ class TaskController
         $title = $data['title'];
         $description = $data['description'];
         $priority = $data['priority'];
-        $deadline = DateTime::createFromFormat('Y-m-d', $data['deadline']);
+        $deadline = $data['deadline'];
 
         if ($this->taskModel->editTask($taskId, $title, $description, $priority, $deadline)) {
             return true;
@@ -60,23 +60,26 @@ class TaskController
         return false;
     }
 
-    public function getTask(int $id)
+    public function getTask(int $id): ?TaskDto
     {
         return $this->taskModel->getTask($id);
     }
 
-    public function completeTask(int $id): ?bool
+    public function completeTask(int $id): bool
     {
-        return $this->taskModel->completeTask($id);
+        $isCompleted = $this->boolToTinyint(true);
+        $completionDate = new DateTime('now')->format('Y-m-d');
+
+        return $this->taskModel->completeTask($id, $isCompleted, $completionDate);
     }
 
-    public function getAllTasks()
+    public function getAllTasks(): array
     {
         $userId = $_SESSION['user']['id'];
         return $this->taskModel->getTasksForUser($userId);
     }
 
-    public function getUncompletedTasks()
+    public function getUncompletedTasks(): array
     {
         $tasks = $this->getAllTasks();
 
@@ -87,7 +90,7 @@ class TaskController
         return $uncompletedTasks;
     }
 
-    public function getCompletedTasks()
+    public function getCompletedTasks(): array
     {
         $tasks = $this->getAllTasks();
 
@@ -126,5 +129,9 @@ class TaskController
         });
 
         return $tasks;
+    }
+
+    private function boolToTinyint(bool $value): int {
+        return $value ? 1 : 0;
     }
 }

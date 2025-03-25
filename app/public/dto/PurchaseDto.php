@@ -23,4 +23,17 @@ class PurchaseDto {
     public function getItemId(): int {
         return $this->itemId;
     }
+
+    // Setters
+    public function setId(int $id): void {
+        $this->id = $id;
+    }
+
+    public function setUserId(int $userId): void {
+        $this->userId = $userId;
+    }
+
+    public function setItemId(int $itemId): void {
+        $this->itemId = $itemId;
+    }
 }

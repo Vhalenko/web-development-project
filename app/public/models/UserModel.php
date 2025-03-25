@@ -9,7 +9,11 @@ class UserModel extends BaseModel
     {
         $query = "SELECT * FROM user ORDER BY total_tasks_completed DESC LIMIT 50";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
+
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
+            return [];
+        }
 
         $topUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -19,15 +23,15 @@ class UserModel extends BaseModel
             $lastCompletedTask = isset($topUser['last_completed_task']) && !empty($topUser['last_completed_task']) ? new DateTime($topUser['last_completed_task']) : null;
 
             $users[] = new UserDto(
-                $topUser['user_id'],              
-                $topUser['username'],   
-                $topUser['full_name'],                
-                $topUser['email'],                       
-                $topUser['streak_count'],          
-                $topUser['total_tasks_completed'], 
-                $topUser['total_points'] ,
+                $topUser['user_id'],
+                $topUser['username'],
+                $topUser['full_name'],
+                $topUser['email'],
+                $topUser['streak_count'],
+                $topUser['total_tasks_completed'],
+                $topUser['total_points'],
                 $lastCompletedTask,
-                $topUser['selected_avatar']        
+                $topUser['selected_avatar']
             );
         }
 
@@ -35,7 +39,7 @@ class UserModel extends BaseModel
     }
 
 
-    public function addUser(string $username, ?string $fullName, string $email, string $password, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask): ?bool
+    public function addUser(string $username, ?string $fullName, string $email, string $password, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?string $lastCompletedTask): bool
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -53,13 +57,12 @@ class UserModel extends BaseModel
         $stmt->bindParam(':total_tasks_completed', $totalTasksCompleted);
         $stmt->bindParam(':last_completed_task', $lastCompletedTask);
 
-        try {
-            $stmt->execute();
-            return true;
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
             return false;
         }
+
+        return true;
     }
 
 
@@ -68,66 +71,57 @@ class UserModel extends BaseModel
         $query = "SELECT * FROM user WHERE email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':email', $email);
-        $stmt->execute();
+
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
+            return null;
+        }
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password_hash'])) {
-            try {
-                $lastCompletedTask = isset($user['last_completed_task']) && !empty($user['last_completed_task']) ? new DateTime($user['last_completed_task']) : null;
-                return new UserDto(
-                    $user['user_id'],              
-                    $user['username'],   
-                    $user['full_name'],                
-                    $user['email'],                       
-                    $user['streak_count'],          
-                    $user['total_tasks_completed'], 
-                    $user['total_points'] ,
-                    $lastCompletedTask,
-                    $user['selected_avatar']          
-                );
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            }
+            $lastCompletedTask = isset($user['last_completed_task']) && !empty($user['last_completed_task']) ? new DateTime($user['last_completed_task']) : null;
+            return new UserDto(
+                $user['user_id'],
+                $user['username'],
+                $user['full_name'],
+                $user['email'],
+                $user['streak_count'],
+                $user['total_tasks_completed'],
+                $user['total_points'],
+                $lastCompletedTask,
+                $user['selected_avatar']
+            );
         }
         return null;
     }
 
-
     public function editUser(int $id, ?string $username, ?string $fullName, ?string $email, ?string $password, ?string $selectedAvatar, ?int $totalPoints): bool
     {
-        $query = "UPDATE user SET ";
-        $params = [];
+        $fields = [];
+        $params = [':user_id' => $id];
 
-        if ($username !== null) {
-            $query .= "username = :username, ";
-            $params[':username'] = $username;
-        }
-        if ($fullName !== null) {
-            $query .= "full_name = :full_name, ";
-            $params[':full_name'] = $fullName;
-        }
-        if ($email !== null) {
-            $query .= "email = :email, ";
-            $params[':email'] = $email;
-        }
-        if ($password !== null) {
-            $query .= "password_hash = :password, ";
-            $params[':password'] = password_hash($password, PASSWORD_DEFAULT);
-        }
-        if ($selectedAvatar !== null) {
-            $query .= "selected_avatar = :selected_avatar, ";
-            $params[':selected_avatar'] = $selectedAvatar;
-        }
-        if ($totalPoints !== null) {
-            $query .= "total_points = :total_points, ";
-            $params[':total_points'] = $totalPoints;
+        $updates = [
+            'username' => $username,
+            'full_name' => $fullName,
+            'email' => $email,
+            'password_hash' => $password ? password_hash($password, PASSWORD_DEFAULT) : null,
+            'selected_avatar' => $selectedAvatar,
+            'total_points' => $totalPoints
+        ];
+
+        foreach ($updates as $column => $value) {
+            if ($value !== null) {
+                $fields[] = "$column = :$column";
+                $params[":$column"] = $value;
+            }
         }
 
-        $query = rtrim($query, ', ');
+        if (empty($fields)) {
+            return false;
+        }
 
-        $query .= " WHERE user_id = :user_id";
-        $params[':user_id'] = $id;
+        $query = "UPDATE user SET " . implode(', ', $fields) . " WHERE user_id = :user_id";
 
         $stmt = $this->pdo->prepare($query);
 
@@ -135,12 +129,12 @@ class UserModel extends BaseModel
             $stmt->bindValue($param, $value);
         }
 
-        try {
-            return $stmt->execute($params);
-        } catch (Exception $e) {
-            echo "Error clearing reset token: " . $e->getMessage();
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
             return false;
         }
+
+        return true;
     }
 
     public function emailExists($email): bool
@@ -150,14 +144,12 @@ class UserModel extends BaseModel
 
         $stmt->bindParam(':email', $email);
 
-        try {
-            $stmt->execute();
-            $count = $stmt->fetchColumn();
-            return $count > 0;
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
             return false;
         }
+
+        return $stmt->fetchColumn();
     }
 
     public function getUserById($userId): ?UserDTO
@@ -166,34 +158,33 @@ class UserModel extends BaseModel
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':userId', $userId);
 
-        try {
-            $stmt->execute();
-            $user = $stmt->fetch();
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
+            return null;
+        }
+        $user = $stmt->fetch();
 
-            if ($user) {
-                $lastCompletedTask = isset($user['last_completed_task']) && !empty($user['last_completed_task']) ? new DateTime($user['last_completed_task']) : null;
-                return new UserDto(
-                    $user['user_id'],              
-                    $user['username'],   
-                    $user['full_name'],                
-                    $user['email'],                       
-                    $user['streak_count'],          
-                    $user['total_tasks_completed'], 
-                    $user['total_points'] ,
-                    $lastCompletedTask,
-                    $user['selected_avatar']          
-                );
-            }
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+        if ($user) {
+            $lastCompletedTask = isset($user['last_completed_task']) && !empty($user['last_completed_task']) ? new DateTime($user['last_completed_task']) : null;
+            return new UserDto(
+                $user['user_id'],
+                $user['username'],
+                $user['full_name'],
+                $user['email'],
+                $user['streak_count'],
+                $user['total_tasks_completed'],
+                $user['total_points'],
+                $lastCompletedTask,
+                $user['selected_avatar']
+            );
         }
         return null;
     }
 
-    public function rewardUser(int $userId, int $streakCount, int $totalPoints, int $totalTasksCompleted, DateTime $lastCompletedTask): ?bool {
+    public function rewardUser(int $userId, int $streakCount, int $totalPoints, int $totalTasksCompleted, string $lastCompletedTask): bool
+    {
         $query = "UPDATE user SET streak_count = :streak_count, total_points = :total_points, total_tasks_completed = :total_tasks_completed, last_completed_task = :last_completed_task WHERE user_id = :user_id";
 
-        $lastCompletedTaskStr = $lastCompletedTask->format('Y-m-d');
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':streak_count', $streakCount);
         $stmt->bindParam(':total_points', $totalPoints);
@@ -201,11 +192,11 @@ class UserModel extends BaseModel
         $stmt->bindParam(':last_completed_task', $lastCompletedTaskStr);
         $stmt->bindParam(':user_id', $userId);
 
-        try {
-            return $stmt->execute();
-        } catch (Exception $e) {
-            echo "Error clearing reset token: " . $e->getMessage();
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
             return false;
         }
+
+        return true;
     }
 }

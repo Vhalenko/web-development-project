@@ -29,6 +29,23 @@ class StoreItemDto {
     public function getAssetPath(): ?string {
         return $this->assetPath;
     }
+
+    // Setters
+    public function setId(int $id): void {
+        $this->id = $id;
+    }
+
+    public function setType(Type $type): void {
+        $this->type = $type;
+    }
+
+    public function setPrice(int $price): void {
+        $this->price = $price;
+    }
+
+    public function setAssetPath(?string $assetPath): void {
+        $this->assetPath = $assetPath;
+    }
 }
 
 enum Type: string {

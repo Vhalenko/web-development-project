@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-    
 
     function generateData(value, i1, i2, step = 1) {
         for (let x = i1; x <= i2; x += step) {

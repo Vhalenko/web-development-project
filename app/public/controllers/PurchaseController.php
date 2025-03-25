@@ -14,11 +14,11 @@ class PurchaseController
         $this->userModel = new UserModel();
     }
 
-    public function create(UserDto $user, StoreItemDto $item)
+    public function createPurchase(UserDto $user, StoreItemDto $item)
     {
         if ($user->getTotalPoints() >= $item->getPrice()) {
             $this->userModel->editUser($user->getUserId(), null, null, null, null, null, $user->getTotalPoints() - $item->getPrice());
-            $this->purchaseModel->create($user->getUserId(), $item->getId());
+            $this->purchaseModel->createPurchase($user->getUserId(), $item->getId());
             $_SESSION['congrat'] = 'the item was successfully bought. you can now chnge your avatar in the profile';
             header("Location: /store");
         } else {

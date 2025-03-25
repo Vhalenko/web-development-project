@@ -13,8 +13,6 @@
 
     <link rel="stylesheet" href="../../assets/css/style.css">
 
-    <script src="/app//public//assets//js//main.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

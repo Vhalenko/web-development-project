@@ -5,11 +5,15 @@ require_once(__DIR__ . "/../dto/StoreItemDto.php");
 
 class StoreItemModel extends BaseModel
 {
-    public function getAllStoreItems(): ?array
+    public function getAllStoreItems(): array
     {
         $query = "SELECT * FROM store_item";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
+
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
+            return [];
+        }
 
         $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -33,7 +37,11 @@ class StoreItemModel extends BaseModel
         $query = "SELECT * FROM store_item WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id);
-        $stmt->execute();
+
+        if (!$stmt->execute()) {
+            error_log("Error executing query: " . implode(", ", $stmt->errorInfo()));
+            return null;
+        }
 
         $item = $stmt->fetch();
 

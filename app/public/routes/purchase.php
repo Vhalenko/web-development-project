@@ -12,5 +12,5 @@ Route::add('/purchase/([0-9]*)', function (int $id) {
     $user = $userController->getUserById($_SESSION['user']['id']);
     $item = $itemController->getStoreItemById($id);
     
-    $purchseController->create($user, $item);
+    $purchseController->createPurchase($user, $item);
 });

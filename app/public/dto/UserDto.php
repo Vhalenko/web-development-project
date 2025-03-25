@@ -1,6 +1,8 @@
 <?php
 
-class UserDto {
+class UserDto
+{
+    private const DEFAULT_AVATAR = 'default-profile.jpg';
     private int $userId;
     private string $username;
     private ?string $fullName;
@@ -11,7 +13,8 @@ class UserDto {
     private ?DateTime $lastCompletedTask;
     private ?string $selectedAvatar;
 
-    public function __construct(int $userId, string $username, ?string $fullName, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask, ?string $selectedAvatar) {
+    public function __construct(int $userId, string $username, ?string $fullName, string $email, int $streakCount, int $totalTasksCompleted, int $totalPoints, ?DateTime $lastCompletedTask, ?string $selectedAvatar)
+    {
         $this->userId = $userId;
         $this->username = $username;
         $this->fullName = $fullName;
@@ -23,67 +26,95 @@ class UserDto {
         $this->selectedAvatar = $selectedAvatar;
     }
 
-    // Getters and Setters
-    public function getUserId() :int {
+    // Getters
+    public function getUserId(): int
+    {
         return $this->userId;
     }
-    public function setUserId($userId) {
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->fullName;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getStreakCount(): int
+    {
+        return $this->streakCount;
+    }
+
+    public function getTotalTasksCompleted(): int
+    {
+        return $this->totalTasksCompleted;
+    }
+
+    public function getTotalPoints(): int
+    {
+        return $this->totalPoints;
+    }
+
+    public function getLastCompletedTask(): ?DateTime
+    {
+        return $this->lastCompletedTask;
+    }
+
+    public function getSelectedAvatar(): ?string
+    {
+        return $this->selectedAvatar ?: self::DEFAULT_AVATAR;
+    }
+
+    // Setters
+    public function setUserId(int $userId): void
+    {
         $this->userId = $userId;
     }
 
-    public function getUsername() :string {
-        return $this->username;
-    }
-    public function setUsername($username) {
+    public function setUsername(string $username): void
+    {
         $this->username = $username;
     }
 
-    public function getFullName() :string {
-        return $this->fullName;
-    }
-    public function setFullName($fullName) {
+    public function setFullName(string $fullName): void
+    {
         $this->fullName = $fullName;
     }
 
-    public function getEmail() :string {
-        return $this->email;
-    }
-    public function setEmail($email) {
+    public function setEmail(string $email): void
+    {
         $this->email = $email;
     }
 
-    public function getStreakCount() :int {
-        return $this->streakCount;
-    }
-    public function setStreakCount($streakCount) {
+    public function setStreakCount(int $streakCount): void
+    {
         $this->streakCount = $streakCount;
     }
 
-    public function getTotalTasksCompleted() :int {
-        return $this->totalTasksCompleted;
-    }
-    public function setTotalTasksCompleted($totalTasksCompleted) {
+    public function setTotalTasksCompleted(int $totalTasksCompleted): void
+    {
         $this->totalTasksCompleted = $totalTasksCompleted;
     }
 
-    public function getTotalPoints() :int {
-        return $this->totalPoints;
-    }
-    public function setTotalPoints($totalPoints) {
+    public function setTotalPoints(int $totalPoints): void
+    {
         $this->totalPoints = $totalPoints;
     }
 
-    public function getLastCompletedTask() :?DateTime {
-        return $this->lastCompletedTask;
-    }
-    public function setLastCompletedTask($lastCompletedTask) {
+    public function setLastCompletedTask(?DateTime $lastCompletedTask): void
+    {
         $this->lastCompletedTask = $lastCompletedTask;
     }
 
-    public function getSelectedAvatar() :?string {
-        return $this->selectedAvatar;
-    }
-    public function setSelectedAvatar(string $selectedAvatar) {
+    public function setSelectedAvatar(string $selectedAvatar): void
+    {
         $this->selectedAvatar = $selectedAvatar;
     }
 }

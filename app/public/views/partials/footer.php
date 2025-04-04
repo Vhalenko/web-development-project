@@ -9,16 +9,21 @@
             <div class="col-md-4 mb-3">
                 <h5>Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="/about" class="text-white text-decoration-none">About Us</a></li>
-                    <li><a href="/contact" class="text-white text-decoration-none">Contact</a></li>
-                    <li><a href="/privacy-policy" class="text-white text-decoration-none">Privacy Policy</a></li>
-                    <li><a href="/terms" class="text-white text-decoration-none">Terms & Conditions</a></li>
+                    <?php if (isset($_SESSION['user'])) { ?>
+                        <li><a href="/store" class="text-white text-decoration-none">Store</a></li>
+                        <li><a href="/tasks" class="text-white text-decoration-none">Tasks</a></li>
+                        <li><a href="/leaderboard" class="text-white text-decoration-none">Leaderboard</a></li>
+                        <li><a href="/profile" class="text-white text-decoration-none">Profile</a></li>
+                    <?php } else { ?>
+                        <li><a href="/login-page" class="text-white text-decoration-none">Login</a></li>
+                    <?php } ?>
                 </ul>
             </div>
 
             <div class="col-md-4 mb-3">
                 <h5>Follow Us</h5>
                 <div>
+                    <!-- these links are fictional to fill the footer with more content -->
                     <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i> Facebook</a>
                     <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i> Twitter</a>
                     <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i> Instagram</a>

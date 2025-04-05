@@ -5,7 +5,7 @@ require_once(__DIR__ . "/../controllers/StoreItemController.php");
 
 Route::add('/store', function () {
     $storeItemController = new StoreItemController();
-    $storeItems = $storeItemController->getAllStoreItems();
+    $storeItems = $storeItemController->getAvatars();
 
     require(__DIR__ . "/../views/pages/store.php");
 });

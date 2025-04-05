@@ -43,7 +43,7 @@ function createTaskElement(task, deadline) {
 function setupEventListeners() {
     document.getElementById("add-task-btn").addEventListener("click", handleTaskSubmit);
     document.getElementById("edit-task-btn").addEventListener("click", handleTaskEdit);
-    
+
     document.body.addEventListener("click", (event) => {
         const target = event.target;
         if (target.classList.contains("edit-btn")) handleEditClick(target);
@@ -75,7 +75,7 @@ function setupFilterAndSort() {
 
 async function handleTaskSubmit(event) {
     event.preventDefault();
-    
+
     const taskData = getTaskData();
     if (!validateTask(taskData)) return;
 
@@ -91,13 +91,14 @@ async function handleTaskEdit(event) {
 
     const taskId = document.getElementById("editTaskId").value;
     const taskData = getTaskData(true);
-    if (!validateTask(taskData)) return;
+    const creationDate = document.getElementById("editTaskForm").dataset.creationDate;
+    if (!validateTask(taskData, creationDate)) return;
 
     const response = await sendRequest(`/api/task/edit/${taskId}`, "POST", taskData);
     if (response) {
         toggleForms(false);
         hideError();
-        loadTasks();
+        loadTasks(getActiveFilter(), getActiveSort());
         document.getElementById("editTaskForm").reset();
     }
 }
@@ -111,10 +112,39 @@ function getTaskData(isEdit = false) {
     };
 }
 
-function validateTask({ title, deadline }) {
-    if (!title) return displayError("Please add a task title"), false;
-    if (deadline < new Date().toISOString().split("T")[0]) return displayError("Deadline cannot be before today."), false;
+function validateTask({ title, deadline }, creationDate = null) {
+    if (!title) {
+        displayError("Please add a task title");
+        return false;
+    }
+
+    const deadlineDate = new Date(deadline).toISOString().split("T")[0];
+
+    if (creationDate == null) {
+        const today = new Date().toISOString().split("T")[0];
+        if (deadlineDate < today) {
+            displayError("Deadline cannot be before today.");
+            return false;
+        }
+    } else {
+        const creationDateOnly = new Date(creationDate).toISOString().split("T")[0];
+        if (deadlineDate < creationDateOnly) {
+            displayError(`Deadline (${deadlineDate}) cannot be before creation date (${creationDateOnly}).`);
+            return false;
+        }
+    }
+
     return true;
+}
+
+async function updateNavbarPoints() {
+    try {
+        const response = await fetch("/api/user/points");
+        const data = await response.json();
+        document.getElementById("totalPoints").textContent = data.totalPoints;
+    } catch (error) {
+        console.error("Failed to update points:", error);
+    }
 }
 
 async function sendRequest(url, method, body) {
@@ -138,8 +168,11 @@ function handleEditClick(button) {
     document.getElementById("editTaskId").value = task.taskId;
     document.getElementById("editTaskTitle").value = task.title;
     document.getElementById("editPriority").value = task.priority;
-    document.getElementById("editDeadline").value = new Date(task.deadline.date).toISOString().split("T")[0];
+    document.getElementById("editDeadline").value = new Date(task.deadline.date).toLocaleDateString('en-CA');
     document.getElementById("editTaskDescription").value = task.description || "";
+
+    // Store creationDate for validation
+    document.getElementById("editTaskForm").dataset.creationDate = task.creationDate.date;
 
     toggleForms(true);
 }
@@ -151,12 +184,12 @@ function toggleForms(editMode) {
 
 async function deleteTask(id) {
     if (confirm("Are you sure you want to delete this task?")) {
-        if (await sendRequest(`/api/task/${id}`, "DELETE")) loadTasks();
+        if (await sendRequest(`/api/task/${id}`, "DELETE")) loadTasks(getActiveFilter(), getActiveSort());
     }
 }
 
 async function completeTask(id) {
-    if (await sendRequest(`/api/task/complete/${id}`, "PUT")) loadTasks();
+    if (await sendRequest(`/api/task/complete/${id}`, "PUT")) loadTasks(getActiveFilter(), getActiveSort()); updateNavbarPoints();
 }
 
 function escapeHtml(str) {

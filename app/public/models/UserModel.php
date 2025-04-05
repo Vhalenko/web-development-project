@@ -189,7 +189,7 @@ class UserModel extends BaseModel
         $stmt->bindParam(':streak_count', $streakCount);
         $stmt->bindParam(':total_points', $totalPoints);
         $stmt->bindParam(':total_tasks_completed', $totalTasksCompleted);
-        $stmt->bindParam(':last_completed_task', $lastCompletedTaskStr);
+        $stmt->bindParam(':last_completed_task', $lastCompletedTask);
         $stmt->bindParam(':user_id', $userId);
 
         if (!$stmt->execute()) {

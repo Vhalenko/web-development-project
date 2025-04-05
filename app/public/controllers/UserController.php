@@ -54,8 +54,7 @@ class UserController
 
             if ($this->userModel->addUser($username, $fullName, $email, $password, 0, 0, 0, null)) {
                 header("Location: /login-page");
-            }
-            else {
+            } else {
                 echo "Error creating a user";
                 exit;
             }
@@ -122,16 +121,21 @@ class UserController
         $points = $user->getTotalPoints();
         $totalTasksCompleted = $user->getTotalTasksCompleted();
         $lastCompletedTask = $user->getLastCompletedTask() ?? new DateTime('-1 day');
+        $lastCompletedTask->setTime(0, 0, 0);
 
         $totalTasksCompleted += 1;
+
+        // Check if the last completed task was today
         if ($lastCompletedTask->format('Y-m-d') != (new DateTime('today'))->format('Y-m-d')) {
-            if ($lastCompletedTask->format('Y-m-d') === (new DateTime('today'))->modify('-1 day')->format('Y-m-d')) {
+            // If the last completed task was exactly yesterday
+            if ($lastCompletedTask->format('Y-m-d') === (new DateTime('-1 day'))->format('Y-m-d')) {
                 $streak = $streak + 1;
                 $points = $points + 50;
             } else {
-                $streak = 1;
+                $streak = 1;  // Reset streak if the last task was not yesterday
             }
         }
+
         $lastCompletedTask = new DateTime('now')->format('Y-m-d');
 
         $this->userModel->rewardUser($user->getUserId(), $streak, $points, $totalTasksCompleted, $lastCompletedTask);

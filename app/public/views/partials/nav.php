@@ -29,7 +29,7 @@ if (isset($_SESSION['user'])) {
                     </li>
                     <li class="nav-item d-flex align-items-center ms-3">
                         <img class="coin-icon" src="../../assets/img/coin.png" alt="Coins">
-                        <span class="ms-2 text-light total-points"><?= $user->getTotalPoints() ?></span>
+                        <span class="ms-2 text-light total-points" id="totalPoints"><?= $user->getTotalPoints() ?></span>
                     </li>
                 </ul>
             <?php } else { ?>
